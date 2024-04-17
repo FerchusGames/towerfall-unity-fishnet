@@ -72,7 +72,7 @@ public class PlayerMovement : MonoBehaviour
     private void Awake()
     {
         PlayerRigidbody2D = GetComponent<Rigidbody2D>();
-        PlayerAnimator = GetComponent<Animator>();
+        PlayerAnimator = GetComponentInChildren<Animator>();
     }
 
     private void Start()
@@ -180,7 +180,7 @@ public class PlayerMovement : MonoBehaviour
     {
         JumpingCheck();
         JumpCutCheck();
-
+        
         if (CanJump() && LastPressedJumpTime > 0)
         {
             IsJumping = true;
