@@ -77,7 +77,7 @@ public class Portal : MonoBehaviour
             return;
 
         PlayerMovement playerMovement = other.GetComponent<PlayerMovement>();
-        playerMovement.RenderCopy.transform.position = 
+        //playerMovement.RenderCopy.transform.position = 
     }
 
     private void OnDrawGizmos()

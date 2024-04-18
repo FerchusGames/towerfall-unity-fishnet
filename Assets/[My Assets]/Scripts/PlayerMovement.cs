@@ -264,7 +264,7 @@ public class PlayerMovement : MonoBehaviour
         else if (PlayerRigidbody2D.velocity.y < 0) 
         {
             SetGravityScale(_gravityScale * _fallGravityMultiplier);
-            FallSpeedCap(_gravityScale * _maxFallSpeed);
+            FallSpeedCap(_maxFallSpeed);
         }
 
         // Reset gravity
