@@ -7,14 +7,15 @@
 */
 
 using System.Collections;
+using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour
+public class PlayerMovement : MonoBehaviour, ICloned
 {
     #region VARIABLES
     public Rigidbody2D PlayerRigidbody2D { get; private set; }
-    public Animator PlayerAnimator { get; private set; }
+    public Animator[] Animators { get; private set; } = new Animator[5];
 
     // State Control
     public bool IsDead { get; private set; }
@@ -72,7 +73,6 @@ public class PlayerMovement : MonoBehaviour
     private void Awake()
     {
         PlayerRigidbody2D = GetComponent<Rigidbody2D>();
-        PlayerAnimator = GetComponentInChildren<Animator>();
     }
 
     private void Start()
@@ -82,6 +82,14 @@ public class PlayerMovement : MonoBehaviour
         SetGravityScale(_gravityScale);
     }
 
+    public void SetAnimators(Animator[] animators)
+    {
+        for (int i = 0; i < 5; i++)
+        {
+            Animators[i] = animators[i];
+        }
+    }
+    
     private void Update()
     {
         UpdateTimers();
@@ -319,25 +327,38 @@ public class PlayerMovement : MonoBehaviour
     #endregion
 
     #region ANIMATIONS
+    
     private void SetAnimatorParameters()
     {
-        PlayerAnimator.SetFloat(_ahSpeed, Mathf.Abs(_moveInput.x));
-        PlayerAnimator.SetBool(_ahIsJumping, IsJumping || IsJumpFalling);
-
+        foreach (Animator animator in Animators)
+        {
+            animator.SetFloat(_ahSpeed, Mathf.Abs(_moveInput.x));
+            animator.SetBool(_ahIsJumping, IsJumping || IsJumpFalling);
+        }
+        
         if (Input.GetKeyDown(KeyCode.F))
         {
             IsDead = !IsDead;
-            PlayerAnimator.SetBool(_ahIsDead, IsDead);
+            foreach (Animator animator in Animators)
+            {
+                animator.SetBool(_ahIsDead, IsDead);
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
-            PlayerAnimator.SetTrigger(_ahShoot);
+            foreach (Animator animator in Animators)
+            {
+                animator.SetTrigger(_ahShoot);
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.Mouse1))
         {
-            PlayerAnimator.SetTrigger(_ahMelee);
+            foreach (Animator animator in Animators)
+            {
+                animator.SetTrigger(_ahMelee);
+            }
         }
     }
     #endregion

@@ -31,5 +31,22 @@ public class CreateClones : MonoBehaviour
         {
             _cloneRenderers[i].transform.SetParent(_mainRenderer.transform, true);
         }
+
+        foreach (ICloned cloned in GetComponents<ICloned>())
+        {
+            cloned.SetAnimators(GetAnimators());
+        }
+    }
+
+    public Animator[] GetAnimators()
+    {
+        return new Animator[]
+        {
+            _mainRenderer.GetComponent<Animator>(),
+            _cloneRenderers[0].GetComponent<Animator>(),
+            _cloneRenderers[1].GetComponent<Animator>(),
+            _cloneRenderers[2].GetComponent<Animator>(),
+            _cloneRenderers[3].GetComponent<Animator>(),
+        };
     }
 }
