@@ -11,6 +11,15 @@ public class CreateClones : MonoBehaviour
 
     private void Start()
     {
+        InstantiateClones();
+
+        SetMainRendererAsParent();
+
+        SetAnimatorsInController();
+    }
+
+    private void InstantiateClones()
+    {
         Vector2 mapSize = GameManager.Instance.CurrentMap.MapSize;
 
         Vector3 clonePosition = new Vector3(transform.position.x - mapSize.x, transform.position.y, transform.position.z); 
@@ -26,12 +35,18 @@ public class CreateClones : MonoBehaviour
         
         clonePosition.y = transform.position.y + mapSize.y;
         _cloneRenderers[3] = Instantiate(_mainRenderer, clonePosition, Quaternion.identity);
+    }
 
+    private void SetMainRendererAsParent()
+    {
         for (int i = 0; i < _cloneRenderers.Length; i++)
         {
             _cloneRenderers[i].transform.SetParent(_mainRenderer.transform, true);
         }
+    }
 
+    private void SetAnimatorsInController()
+    {
         foreach (ICloned cloned in GetComponents<ICloned>())
         {
             cloned.SetAnimators(GetAnimators());

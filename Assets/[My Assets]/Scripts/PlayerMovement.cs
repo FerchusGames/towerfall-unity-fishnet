@@ -14,6 +14,7 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour, ICloned
 {
     #region VARIABLES
+
     public Rigidbody2D PlayerRigidbody2D { get; private set; }
     public Animator[] Animators { get; private set; } = new Animator[5];
 
@@ -28,23 +29,27 @@ public class PlayerMovement : MonoBehaviour, ICloned
     public float LastOnGroundTime { get; private set; }
     public float LastPressedJumpTime { get; private set; }
 
-    [Header ("Acceleration")]
-    [SerializeField] private float _runMaxSpeed = default;
+    [Header("Acceleration")] [SerializeField]
+    private float _runMaxSpeed = default;
+
     [SerializeField] private float _runAccelerationRate = default;
     [SerializeField] private float _runDecelerationRate = default;
     [SerializeField, Range(0, 1f)] private float _airAccelerationMultiplier = default;
     [SerializeField, Range(0, 1f)] private float _airDecelerationMultiplier = default;
 
-    [Header("Jumping")]
-    [SerializeField] private float _jumpForce = default;
+    [Header("Jumping")] [SerializeField] private float _jumpForce = default;
     [SerializeField] private float _coyoteTime = default;
     [SerializeField] private float _jumpInputBufferTime = default;
     [SerializeField] private float _jumpHangTimeThreshold = default;
     [SerializeField] private float _jumpHangAccelerationMultiplier = default;
     [SerializeField] private float _jumpHangMaxSpeedMultiplier = default;
 
-    [Header("Gravity")]
-    [SerializeField] private float _gravityScale = default;
+    [Header("Dashing")] [SerializeField] private float _dashSpeed = default;
+    [SerializeField] private float _dashTime = default;
+    [SerializeField] private float _dashHangTime = default;
+    [SerializeField] private float _dashCooldown = default;
+
+    [Header("Gravity")] [SerializeField] private float _gravityScale = default;
     [SerializeField] private float _maxFallSpeed = default;
     [SerializeField] private float _maxFastFallSpeed = default;
     [SerializeField] private float _fallGravityMultiplier = default;
@@ -52,22 +57,24 @@ public class PlayerMovement : MonoBehaviour, ICloned
     [SerializeField] private float _jumpCutGravityMultiplier = default;
     [SerializeField] private float _jumpHangGravityMultiplier = default;
 
-    [Header ("Checks")]
-    [SerializeField] private Transform _groundCheckPoint = null;
+    [Header("Checks")] [SerializeField] private Transform _groundCheckPoint = null;
     [SerializeField] private Vector2 _groundCheckSize = new Vector2(0.5f, 0.03f);
 
-    [Header("Layers & Tags")]
-    [SerializeField] private LayerMask _groundLayer = default;
+    [Header("Layers & Tags")] [SerializeField]
+    private LayerMask _groundLayer = default;
 
     private Vector2 _moveInput = default;
+
     #endregion
 
     #region ANIMATION HASHES
+
     private int _ahIsDead = Animator.StringToHash("IsDead");
     private int _ahIsJumping = Animator.StringToHash("IsJumping");
     private int _ahMelee = Animator.StringToHash("Melee");
     private int _ahShoot = Animator.StringToHash("Shoot");
     private int _ahSpeed = Animator.StringToHash("Speed");
+
     #endregion
 
     private void Awake()
@@ -89,7 +96,7 @@ public class PlayerMovement : MonoBehaviour, ICloned
             Animators[i] = animators[i];
         }
     }
-    
+
     private void Update()
     {
         UpdateTimers();
@@ -106,6 +113,7 @@ public class PlayerMovement : MonoBehaviour, ICloned
     }
 
     #region INPUT HANDLER
+
     private void HandleInput()
     {
         _moveInput.x = Input.GetAxisRaw("Horizontal");
@@ -126,14 +134,17 @@ public class PlayerMovement : MonoBehaviour, ICloned
             OnJumpUpInput();
         }
     }
+
     #endregion
 
     #region RUN METHODS
+
     private void Run()
     {
         float targetSpeed = _moveInput.x * _runMaxSpeed;
 
         #region CALCULATING ACCELERATION RATE
+
         float accelerationRate;
 
         // Our acceleration rate will differ depending on if we are trying to accelerate or if we are trying to stop completely.
@@ -146,16 +157,21 @@ public class PlayerMovement : MonoBehaviour, ICloned
 
         else
         {
-            accelerationRate = (Mathf.Abs(targetSpeed) > 0.01f) ? _runAccelerationRate * _airAccelerationMultiplier : _runDecelerationRate * _airDecelerationMultiplier;
+            accelerationRate = (Mathf.Abs(targetSpeed) > 0.01f)
+                ? _runAccelerationRate * _airAccelerationMultiplier
+                : _runDecelerationRate * _airDecelerationMultiplier;
         }
+
         #endregion
 
         #region ADD BONUS JUMP APEX ACCELERATION
+
         if ((IsJumping || IsJumpFalling) && Mathf.Abs(PlayerRigidbody2D.velocity.y) < _jumpHangTimeThreshold)
         {
             accelerationRate *= _jumpHangAccelerationMultiplier;
             targetSpeed *= _jumpHangMaxSpeedMultiplier;
         }
+
         #endregion
 
         float speedDifference = targetSpeed - PlayerRigidbody2D.velocity.x;
@@ -181,14 +197,16 @@ public class PlayerMovement : MonoBehaviour, ICloned
 
         IsFacingRight = !IsFacingRight;
     }
+
     #endregion
 
     #region JUMP CHECKS
+
     private void JumpChecks()
     {
         JumpingCheck();
         JumpCutCheck();
-        
+
         if (CanJump() && LastPressedJumpTime > 0)
         {
             IsJumping = true;
@@ -216,9 +234,11 @@ public class PlayerMovement : MonoBehaviour, ICloned
             IsJumpFalling = false; // Logic failure in the original script?
         }
     }
+
     #endregion
 
     #region JUMP METHODS
+
     private void Jump()
     {
         JumpResetTimers();
@@ -238,9 +258,11 @@ public class PlayerMovement : MonoBehaviour, ICloned
         LastPressedJumpTime = 0;
         LastOnGroundTime = 0;
     }
+
     #endregion
 
     #region GRAVITY
+
     private void SetGravityScale(float gravityScale)
     {
         PlayerRigidbody2D.gravityScale = gravityScale;
@@ -249,27 +271,27 @@ public class PlayerMovement : MonoBehaviour, ICloned
     private void GravityShifts()
     {
         // Make player fall faster if holding down S
-        if (PlayerRigidbody2D.velocity.y < 0 && _moveInput.y < 0) 
+        if (PlayerRigidbody2D.velocity.y < 0 && _moveInput.y < 0)
         {
             SetGravityScale(_gravityScale * _fastFallGravityMultiplier);
             FallSpeedCap(_maxFastFallSpeed);
         }
 
         // Scale gravity up if jump button released
-        else if (IsJumpCut) 
+        else if (IsJumpCut)
         {
             SetGravityScale(_gravityScale * _jumpCutGravityMultiplier);
             FallSpeedCap(_maxFallSpeed);
         }
 
         // Higher gravity when near jump height apex
-        else if ((IsJumping || IsJumpFalling) && Mathf.Abs(PlayerRigidbody2D.velocity.y) < _jumpHangTimeThreshold) 
+        else if ((IsJumping || IsJumpFalling) && Mathf.Abs(PlayerRigidbody2D.velocity.y) < _jumpHangTimeThreshold)
         {
             SetGravityScale(_gravityScale * _jumpHangGravityMultiplier);
         }
 
         // Higher gravity if falling
-        else if (PlayerRigidbody2D.velocity.y < 0) 
+        else if (PlayerRigidbody2D.velocity.y < 0)
         {
             SetGravityScale(_gravityScale * _fallGravityMultiplier);
             FallSpeedCap(_maxFallSpeed);
@@ -284,12 +306,14 @@ public class PlayerMovement : MonoBehaviour, ICloned
 
     private void FallSpeedCap(float fallSpeedMaxValue)
     {
-        PlayerRigidbody2D.velocity = new Vector2(PlayerRigidbody2D.velocity.x, Mathf.Max(PlayerRigidbody2D.velocity.y, -fallSpeedMaxValue));
+        PlayerRigidbody2D.velocity = new Vector2(PlayerRigidbody2D.velocity.x,
+            Mathf.Max(PlayerRigidbody2D.velocity.y, -fallSpeedMaxValue));
     }
 
     #endregion
 
     #region INPUT CALLBACKS
+
     private void OnJumpInput()
     {
         LastPressedJumpTime = _jumpInputBufferTime;
@@ -302,9 +326,11 @@ public class PlayerMovement : MonoBehaviour, ICloned
             IsJumpCut = true;
         }
     }
+
     #endregion
 
     #region COLLISION CHECKS
+
     private void GroundCheck()
     {
         if (Physics2D.OverlapBox(_groundCheckPoint.position, _groundCheckSize, 0, _groundLayer) && !IsJumping)
@@ -312,9 +338,11 @@ public class PlayerMovement : MonoBehaviour, ICloned
             LastOnGroundTime = _coyoteTime;
         }
     }
+
     #endregion
 
     #region CHECK METHODS
+
     private bool CanJump()
     {
         return LastOnGroundTime > 0 && !IsJumping;
@@ -324,45 +352,35 @@ public class PlayerMovement : MonoBehaviour, ICloned
     {
         return IsJumping && PlayerRigidbody2D.velocity.y > 0;
     }
+
     #endregion
 
     #region ANIMATIONS
-    
+
     private void SetAnimatorParameters()
     {
-        foreach (Animator animator in Animators)
-        {
-            animator.SetFloat(_ahSpeed, Mathf.Abs(_moveInput.x));
-            animator.SetBool(_ahIsJumping, IsJumping || IsJumpFalling);
-        }
+        Animators.SetFloat(_ahSpeed, Mathf.Abs(_moveInput.x));
+        Animators.SetBool(_ahIsJumping, IsJumping || IsJumpFalling);
         
         if (Input.GetKeyDown(KeyCode.F))
         {
             IsDead = !IsDead;
-            foreach (Animator animator in Animators)
-            {
-                animator.SetBool(_ahIsDead, IsDead);
-            }
+            Animators.SetBool(_ahIsDead, IsDead);
         }
 
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
-            foreach (Animator animator in Animators)
-            {
-                animator.SetTrigger(_ahShoot);
-            }
+            Animators.SetTrigger(_ahShoot);
         }
 
         if (Input.GetKeyDown(KeyCode.Mouse1))
         {
-            foreach (Animator animator in Animators)
-            {
-                animator.SetTrigger(_ahMelee);
-            }
+            Animators.SetTrigger(_ahMelee);
         }
     }
+    
     #endregion
-
+    
     #region TIMERS
     private void UpdateTimers()
     {
