@@ -2,7 +2,6 @@
  
     Based on the PlayerMovement.cs script by @Dawnosaur on GitHub.
     Game feel concepts learned from @Dawnosaur video: https://www.youtube.com/watch?v=KbtcEVCM7bw.
-    Document about concepts learned: https://docs.google.com/document/d/1neL358fLZM3yz3O9kkJKi3RBuq3Bzq6jvvDE-C_UFkM/edit?usp=sharing.
  
 */
 

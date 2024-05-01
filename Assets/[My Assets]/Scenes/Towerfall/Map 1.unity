@@ -883,6 +883,11 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!4 &1149039176 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7368577263106833933, guid: 30cba262efff9b84bac2e24655790602, type: 3}
+  m_PrefabInstance: {fileID: 8224370018968969965}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1200793865 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 9042183837977080383, guid: 47acb0006abd4cd47bdf65a71944bd64, type: 3}
@@ -13861,6 +13866,10 @@ PrefabInstance:
       value: 1.23
       objectReference: {fileID: 0}
     - target: {fileID: 6069284296269942150, guid: 30cba262efff9b84bac2e24655790602, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6069284296269942150, guid: 30cba262efff9b84bac2e24655790602, type: 3}
       propertyPath: _jumpForce
       value: 16.3
       objectReference: {fileID: 0}
@@ -13912,10 +13921,14 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: -1.295
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6069284296269942150, guid: 30cba262efff9b84bac2e24655790602, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3505909690494666540, guid: 30cba262efff9b84bac2e24655790602, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8224370018968969981}
     - targetCorrespondingSourceObject: {fileID: 3505909690494666540, guid: 30cba262efff9b84bac2e24655790602, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8224370018968969967}
@@ -13958,6 +13971,45 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40abc4f33c5d89546b9b2fa7a9a76396, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &8224370018968969981
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8224370018968969966}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aaf89e60afd28b847901ccf7b633d59d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <RunMaxSpeed>k__BackingField: 10
+  <RunAccelerationRate>k__BackingField: 10
+  <RunDecelerationRate>k__BackingField: 25
+  <AirAccelerationMultiplier>k__BackingField: 0.5
+  <AirDecelerationMultiplier>k__BackingField: 0.75
+  <JumpForce>k__BackingField: 16.3
+  <CoyoteTime>k__BackingField: 0.2
+  <JumpInputBufferTime>k__BackingField: 0.2
+  <JumpHangTimeThreshold>k__BackingField: 3
+  <JumpHangAccelerationMultiplier>k__BackingField: 2
+  <JumpHangMaxSpeedMultiplier>k__BackingField: 1.1
+  <DashSpeed>k__BackingField: 0
+  <DashTime>k__BackingField: 0
+  <DashHangTime>k__BackingField: 0
+  <DashCooldown>k__BackingField: 0
+  <GravityScale>k__BackingField: 4
+  <MaxFallSpeed>k__BackingField: 18
+  <MaxFastFallSpeed>k__BackingField: 23
+  <FallGravityMultiplier>k__BackingField: 2
+  <FastFallGravityMultiplier>k__BackingField: 4
+  <JumpCutGravityMultiplier>k__BackingField: 3
+  <JumpHangGravityMultiplier>k__BackingField: 3
+  <GroundCheckPoint>k__BackingField: {fileID: 1149039176}
+  <GroundCheckSize>k__BackingField: {x: 1, y: 0.03}
+  <GroundLayer>k__BackingField:
+    serializedVersion: 2
+    m_Bits: 8
 --- !u!1001 &9042183839177530166
 PrefabInstance:
   m_ObjectHideFlags: 0
