@@ -5,14 +5,14 @@
 //
 // public class NetworkRigidbodyV4 : NetworkBehaviour
 // {
-//     [SerializeField] private Vector2 _direction;
-//     [SerializeField] private float _force;
+//     [SerializeField] private Vector2 Direction;
+//     [SerializeField] private float Force;
 //     
 //     private Rigidbody2D _rigidbody2D;
 //
 //     private Vector2 _startPosition;
 //
-//     [SerializeField] private PredictionManager _predictionManager;
+//     [SerializeField] private PredictionManager predictionManager;
 //
 //     [SyncVar(SendRate = 0.2f, OnChange = nameof(OnReconciliationDataChange), Channel = Channel.Unreliable)] // Refreshes the last packet each second
 //     private ReconciliationData reconciliationData;
@@ -33,7 +33,7 @@
 //
 //         _rigidbody2D.position = next.Position; // We position according to where the server says it is located
 //         (Vector2 finalPosition, Vector2 finalVelocity) =
-//             _predictionManager.Predict(gameObject, next.Velocity, steps);
+//             predictionManager.Predict(gameObject, next.Velocity, steps);
 //         _rigidbody2D.position = finalPosition;
 //         _rigidbody2D.velocity = finalVelocity;
 //     }
@@ -52,7 +52,7 @@
 //         if (Input.GetKeyDown(KeyCode.Space))
 //         {
 //             ShootRPC(base.TimeManager.Tick);
-//             _rigidbody2D.velocity = _force * _direction;
+//             _rigidbody2D.velocity = Force * Direction;
 //         }
 //
 //         if (Input.GetKeyDown(KeyCode.R))
@@ -78,7 +78,7 @@
 //         int steps = (int)(passedTime / stepInterval); // How many physics frame to calculate
 //
 //         (Vector2 finalPosition, Vector2 finalVelocity) =
-//             _predictionManager.Predict(gameObject, _force * _direction, steps);
+//             predictionManager.Predict(gameObject, Force * Direction, steps);
 //         _rigidbody2D.position = finalPosition;
 //         _rigidbody2D.velocity = finalVelocity;
 //     }

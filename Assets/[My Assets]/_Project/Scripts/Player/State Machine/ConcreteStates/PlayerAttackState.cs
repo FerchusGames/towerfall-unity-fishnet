@@ -18,11 +18,14 @@ public class PlayerAttackState : PlayerState
     {
         base.ExitState();
 
-        if (InstanceFinder.NetworkManager.IsServerStarted)
+        if (InstanceFinder.NetworkManager.IsServerStarted && _inputData.Joystick != Vector2.zero)
         {
             Vector2 shootingDirection = _inputData.Joystick.normalized;
-            
-            
+
+            GameObject arrow = _player.ArrowPrefab;
+            arrow.GetComponent<ProjectileMovement>().Direction = shootingDirection;
+            arrow = GameObject.Instantiate(arrow, _player.ArrowSpawnPoint.position, Quaternion.identity);
+            InstanceFinder.ServerManager.Spawn(arrow, null);
         }
     }
 

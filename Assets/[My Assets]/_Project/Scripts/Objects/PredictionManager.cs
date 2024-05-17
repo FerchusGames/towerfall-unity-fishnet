@@ -1,3 +1,4 @@
+using System;
 using FishNet.Object;
 using FishNet.Observing;
 using UnityEngine;
@@ -12,6 +13,20 @@ public class PredictionManager : MonoBehaviour
 
     PhysicsScene2D currentPhysicsScene;
     PhysicsScene2D predictionPhysicsScene;
+
+    public static PredictionManager Instance { get; private set; }
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(this);
+            return;
+        }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
 
     void Start()
     {

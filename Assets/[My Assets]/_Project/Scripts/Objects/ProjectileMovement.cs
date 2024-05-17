@@ -1,18 +1,18 @@
+using System;
 using UnityEngine;
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
 using FishNet.Transporting;
+using UnityEngine.Serialization;
 
 public class ProjectileMovement : NetworkBehaviour
 {
-    [SerializeField] private Vector2 _direction;
+    [SerializeField] public Vector2 Direction;
     [SerializeField] private float _force;
     
     private Rigidbody2D _rigidbody2D;
 
     private Vector2 _startPosition;
-
-    [SerializeField] private PredictionManager _predictionManager;
 
     readonly private SyncVar<ReconciliationData> reconciliationData = new SyncVar<ReconciliationData>();
     
@@ -41,26 +41,28 @@ public class ProjectileMovement : NetworkBehaviour
 
         _rigidbody2D.position = next.Position; // We position according to where the server says it is located
         (Vector2 finalPosition, Vector2 finalVelocity) =
-            _predictionManager.Predict(gameObject, next.Velocity, steps);
+            global::PredictionManager.Instance.Predict(gameObject, next.Velocity, steps);
         _rigidbody2D.position = finalPosition;
         _rigidbody2D.velocity = finalVelocity;
+    }
+
+    private void RotateTowardsMovement()
+    {
+        Vector2 dir = _rigidbody2D.velocity;
+        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+    }
+
+    private void Start()
+    {
+        ShootRPC(base.TimeManager.Tick);
+        _rigidbody2D.velocity = _force * Direction;
     }
 
     private void Update()
     {
         if (!base.IsServer)
             return;
-
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            ShootRPC(base.TimeManager.Tick);
-            _rigidbody2D.velocity = _force * _direction;
-        }
-
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            RestartRPC();
-        }
         
         // Update the reconciliation data
         reconciliationData.Value = new ReconciliationData() // Only sends the last value when it is due
@@ -69,6 +71,8 @@ public class ProjectileMovement : NetworkBehaviour
             Velocity = _rigidbody2D.velocity,
             Tick = base.TimeManager.Tick
         };
+        
+        RotateTowardsMovement();
     }
 
     [ObserversRpc]
@@ -80,7 +84,8 @@ public class ProjectileMovement : NetworkBehaviour
         int steps = (int)(passedTime / stepInterval); // How many physics frame to calculate
 
         (Vector2 finalPosition, Vector2 finalVelocity) =
-            _predictionManager.Predict(gameObject, _force * _direction, steps);
+            
+            global::PredictionManager.Instance.Predict(gameObject, _force * Direction, steps);
         _rigidbody2D.position = finalPosition;
         _rigidbody2D.velocity = finalVelocity;
     }

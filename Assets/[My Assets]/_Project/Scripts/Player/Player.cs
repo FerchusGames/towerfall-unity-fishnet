@@ -8,6 +8,7 @@
 using FishNet.Object;
 using FishNet.Object.Prediction;
 using FishNet.Transporting;
+using TreeEditor;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -83,6 +84,10 @@ public class Player : NetworkBehaviour, ICloned
     [field:SerializeField] public Transform GroundCheckPoint { get; private set; } = null;
     [field:SerializeField] public Vector2 GroundCheckSize { get; private set; } = new Vector2(0.5f, 0.03f);
 
+    [field:Header("Combat")]
+    [field:SerializeField] public GameObject ArrowPrefab { get; private set; }
+    [field:SerializeField] public Transform ArrowSpawnPoint { get; private set; }
+    
     [field:Header("Layers & Tags")] 
     [field:SerializeField] public LayerMask GroundLayer { get; private set; } = default;
 

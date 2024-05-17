@@ -146,6 +146,7 @@ Transform:
   - {fileID: 2640114940222714051}
   - {fileID: 1231055581752940198}
   - {fileID: 677109642169047125}
+  - {fileID: 3819010156052760649}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &6897781733559925378
@@ -266,6 +267,8 @@ MonoBehaviour:
   <JumpHangGravityMultiplier>k__BackingField: 3
   <GroundCheckPoint>k__BackingField: {fileID: 7368577263106833933}
   <GroundCheckSize>k__BackingField: {x: 1, y: 0.03}
+  <ArrowPrefab>k__BackingField: {fileID: 4834802896249470314, guid: 26f1f1a643f45c64c90ca27df11c16fe, type: 3}
+  <ArrowSpawnPoint>k__BackingField: {fileID: 3819010156052760649}
   <GroundLayer>k__BackingField:
     serializedVersion: 2
     m_Bits: 8
@@ -523,6 +526,37 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _spawnObject: {fileID: 2761181596593322374, guid: 42b0d559c3b3e9e47b335d1182a20f2e, type: 3}
   _objectLifetime: 3
+--- !u!1 &6144575449416599828
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3819010156052760649}
+  m_Layer: 0
+  m_Name: ArrowSpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3819010156052760649
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6144575449416599828}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.32, y: -0.17, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3524387990224108302}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7938994918658700142
 GameObject:
   m_ObjectHideFlags: 0
