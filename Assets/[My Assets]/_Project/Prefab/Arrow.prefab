@@ -108,7 +108,7 @@ MonoBehaviour:
   <SerializedRootNetworkBehaviour>k__BackingField: {fileID: 0}
   <NestedRootNetworkBehaviours>k__BackingField: []
   SerializedTransformProperties:
-    Position: {x: -8.45, y: -7.78, z: 0}
+    Position: {x: 0, y: 0, z: 0}
     Rotation: {x: 0, y: 0, z: 0, w: 1}
     LocalScale: {x: 1, y: 1, z: 1}
   _isNetworked: 1
@@ -145,7 +145,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 0.1
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -218,4 +218,6 @@ MonoBehaviour:
   _addedNetworkObject: {fileID: 2617533099041311595}
   _networkObjectCache: {fileID: 2617533099041311595}
   Direction: {x: 1, y: 0}
-  _force: 20
+  _force: 5
+  ownerId: -1
+  OwnerGameObject: {fileID: 0}

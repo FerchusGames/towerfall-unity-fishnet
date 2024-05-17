@@ -23,7 +23,10 @@ public class PlayerAttackState : PlayerState
             Vector2 shootingDirection = _inputData.Joystick.normalized;
 
             GameObject arrow = _player.ArrowPrefab;
-            arrow.GetComponent<ProjectileMovement>().Direction = shootingDirection;
+            ProjectileMovement projectileMovement = arrow.GetComponent<ProjectileMovement>();
+            projectileMovement.Direction = shootingDirection;
+            projectileMovement.ownerId = _inputData.Id;
+            projectileMovement.OwnerGameObject = _player.gameObject;
             arrow = GameObject.Instantiate(arrow, _player.ArrowSpawnPoint.position, Quaternion.identity);
             InstanceFinder.ServerManager.Spawn(arrow, null);
         }

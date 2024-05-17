@@ -9,6 +9,9 @@ public class ProjectileMovement : NetworkBehaviour
 {
     [SerializeField] public Vector2 Direction;
     [SerializeField] private float _force;
+
+    public float ownerId = -1;
+    public GameObject OwnerGameObject;
     
     private Rigidbody2D _rigidbody2D;
 
@@ -43,7 +46,11 @@ public class ProjectileMovement : NetworkBehaviour
         (Vector2 finalPosition, Vector2 finalVelocity) =
             global::PredictionManager.Instance.Predict(gameObject, next.Velocity, steps);
         _rigidbody2D.position = finalPosition;
+        transform.position = finalPosition;
         _rigidbody2D.velocity = finalVelocity;
+        
+        Debug.Log($"Position: {transform.position}, Velocity: {_rigidbody2D.velocity}, PassedTime: {passedTime}, " +
+                  $"Steps: {steps} , Tick: {TimeManager.Tick}");
     }
 
     private void RotateTowardsMovement()
@@ -55,8 +62,8 @@ public class ProjectileMovement : NetworkBehaviour
 
     private void Start()
     {
-        ShootRPC(base.TimeManager.Tick);
         _rigidbody2D.velocity = _force * Direction;
+        ShootRPC(base.TimeManager.Tick);
     }
 
     private void Update()
@@ -82,20 +89,12 @@ public class ProjectileMovement : NetworkBehaviour
 
         float stepInterval = Time.fixedDeltaTime;
         int steps = (int)(passedTime / stepInterval); // How many physics frame to calculate
-
+        
         (Vector2 finalPosition, Vector2 finalVelocity) =
-            
             global::PredictionManager.Instance.Predict(gameObject, _force * Direction, steps);
         _rigidbody2D.position = finalPosition;
+        transform.position = finalPosition;
         _rigidbody2D.velocity = finalVelocity;
-    }
-
-    [ObserversRpc (RunLocally = true)]
-    private void RestartRPC()
-    {
-        _rigidbody2D.position = _startPosition;
-        _rigidbody2D.velocity = Vector2.zero;
-        _rigidbody2D.angularVelocity = 0f;
     }
 
     [System.Serializable] // Can be turned into a JSON or be transferred via networking (fishnet, servers)
@@ -104,5 +103,18 @@ public class ProjectileMovement : NetworkBehaviour
         public Vector2 Position;
         public Vector2 Velocity;
         public uint Tick;
+    }
+
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        if (!IsServerInitialized)
+            return;
+        
+        if (other.gameObject != OwnerGameObject && other.gameObject.CompareTag("Player"))
+        {
+            Debug.Log($"A point has been awarded to {ownerId}");
+        }
+        
+        Despawn();
     }
 }

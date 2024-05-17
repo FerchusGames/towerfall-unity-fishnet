@@ -169,6 +169,8 @@ public class Player : NetworkBehaviour, ICloned
 
     public struct InputData : IReplicateData
     {
+        public int Id;
+        
         public Vector2 Joystick;
         
         public bool JumpKeyDown;
@@ -177,10 +179,11 @@ public class Player : NetworkBehaviour, ICloned
         public bool ShootKeyDown;
         public bool ShootKeyUp;
             
-        public InputData(Vector2 joystick, 
+        public InputData(int id, Vector2 joystick, 
             bool jumpKeyDown, bool jumpKeyUp,
             bool shootKeyDown, bool shootKeyUp)
         {
+            Id = id;
             Joystick = joystick;
             JumpKeyDown = jumpKeyDown;
             JumpKeyUp = jumpKeyUp;
@@ -264,7 +267,7 @@ public class Player : NetworkBehaviour, ICloned
             return default;
 
         Vector2 joystick = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-        InputData inputData = new InputData(joystick, _jumpKeyDownCache, _jumpKeyUpCache, 
+        InputData inputData = new InputData(base.OwnerId, joystick, _jumpKeyDownCache, _jumpKeyUpCache, 
             _shootKeyDownChache, _shootKeyUpCache);
         
         ResetNetworkChache();
@@ -311,8 +314,8 @@ public class Player : NetworkBehaviour, ICloned
         
         if (base.IsOwner)
         {
-            print($"Reconciliation Position: {reconciliationData.Position}");
-            print($"Reconciliation Velocity: {reconciliationData.Velocity}");
+            //print($"Reconciliation Position: {reconciliationData.Position}");
+            //print($"Reconciliation Velocity: {reconciliationData.Velocity}");
         }
 
         PlayerRigidbody2D.velocity = reconciliationData.Velocity;
