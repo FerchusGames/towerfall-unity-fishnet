@@ -4,9 +4,7 @@ using FishNet.Transporting;
 
 public class PlayerMoveState : PlayerState
 {
-    public PlayerMoveState(Player player, PlayerStateMachine playerStateMachine) : base(player, playerStateMachine)
-    {
-    }
+    public PlayerMoveState(Player player, PlayerStateMachine playerStateMachine) : base(player, playerStateMachine) { }
 
     public override void EnterState()
     {
@@ -21,13 +19,19 @@ public class PlayerMoveState : PlayerState
     public override void FrameUpdate(Player.InputData input, ReplicateState state = ReplicateState.Invalid, Channel channel = Channel.Unreliable)
     {
         base.FrameUpdate(input);
+        
+        if (input.ShootKeyDown)
+        {
+            _playerStateMachine.ChangeState(_player.AttackState);
+        }
+        
         JumpChecks();
-        GravityShifts();
+        Run();
     }
 
     public override void PhysicsUpdate()
     {
-        Run();
+        
     }
 
     public override void AnimationTriggerEvent(Player.AnimationTriggerType triggerType)
@@ -73,110 +77,11 @@ public class PlayerMoveState : PlayerState
 
         float speedDifference = targetSpeed - _player.PlayerRigidbody2D.velocity.x;
 
-        float movement = speedDifference * accelerationRate;
+        float movement = speedDifference * accelerationRate;    
 
         _player.PlayerRigidbody2D.AddForce(movement * Vector2.right, ForceMode2D.Force);
     }
     #endregion
     
-    #region JUMP CHECKS
-
-    private void JumpChecks()
-    {
-        JumpingCheck();
-        JumpCutCheck();
-
-        if (_player.CanJump() && _player.LastPressedJumpTime > 0)
-        {
-            _player.IsJumping = true;
-            _player.IsJumpCut = false;
-            _player.IsJumpFalling = false;
-            Jump();
-        }
-    }
-
-    private void JumpingCheck()
-    {
-        if (_player.IsJumping && _player.PlayerRigidbody2D.velocity.y < 0)
-        {
-            _player.IsJumping = false;
-
-            _player.IsJumpFalling = true;
-        }
-    }
-
-    private void JumpCutCheck()
-    {
-        if (_player.LastOnGroundTime > 0 && !_player.IsJumping)
-        {
-            _player.IsJumpCut = false;
-            _player.IsJumpFalling = false; // Logic failure in the original script?
-        }
-    }
-    
-    #endregion
-    
-    #region JUMP METHODS
-
-    private void Jump()
-    {
-        JumpResetTimers();
-
-        float force = _player.JumpForce;
-
-        if (_player.PlayerRigidbody2D.velocity.y < 0)
-        {
-            force -= _player.PlayerRigidbody2D.velocity.y; // To always jump the same amount.
-        }
-
-        _player.PlayerRigidbody2D.AddForce(Vector2.up * force, ForceMode2D.Impulse);
-    }
-
-    private void JumpResetTimers()
-    {
-        _player.LastPressedJumpTime = 0;
-        _player.LastOnGroundTime = 0;
-    }
-
-    #endregion
-    
-    #region GRAVITY
-
-    private void GravityShifts()
-    {
-        // Make player fall faster if holding down S
-        if (_player.PlayerRigidbody2D.velocity.y < 0 && _inputData.Joystick.y < 0)
-        {
-            _player.SetGravityScale(_player.GravityScale * _player.FallGravityMultiplier);
-            _player.FallSpeedCap(_player.MaxFastFallSpeed);
-        }
-
-        // Scale gravity up if jump button released
-        else if (_player.IsJumpCut)
-        {
-            _player.SetGravityScale(_player.GravityScale * _player.JumpCutGravityMultiplier);
-            _player.FallSpeedCap(_player.MaxFallSpeed);
-        }
-
-        // Higher gravity when near jump height apex
-        else if ((_player.IsJumping || _player.IsJumpFalling) && Mathf.Abs(_player.PlayerRigidbody2D.velocity.y) < _player.JumpHangTimeThreshold)
-        {
-            _player.SetGravityScale(_player.GravityScale * _player.JumpHangGravityMultiplier);
-        }
-
-        // Higher gravity if falling
-        else if (_player.PlayerRigidbody2D.velocity.y < 0)
-        {
-            _player.SetGravityScale(_player.GravityScale * _player.FallGravityMultiplier);
-            _player.FallSpeedCap(_player.MaxFallSpeed);
-        }
-
-        // Reset gravity
-        else
-        {
-            _player.SetGravityScale(_player.GravityScale);
-        }
-    }
-
-    #endregion
+   
 }

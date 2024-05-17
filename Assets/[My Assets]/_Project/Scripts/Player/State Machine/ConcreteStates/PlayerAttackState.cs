@@ -1,3 +1,5 @@
+using FishNet;
+using FishNet.Managing;
 using UnityEngine;
 using FishNet.Object;
 using FishNet.Transporting;
@@ -15,11 +17,30 @@ public class PlayerAttackState : PlayerState
     public override void ExitState()
     {
         base.ExitState();
+
+        if (InstanceFinder.NetworkManager.IsServerStarted)
+        {
+            Vector2 shootingDirection = _inputData.Joystick.normalized;
+            
+            
+        }
     }
 
     public override void FrameUpdate(Player.InputData input, ReplicateState state = ReplicateState.Invalid, Channel channel = Channel.Unreliable)
     {
         base.FrameUpdate(input);
+        
+        if (input.ShootKeyUp)
+        {
+            _playerStateMachine.ChangeState(_player.MoveState);
+        }
+        
+        if (_player.LastOnGroundTime > 0)
+        {
+            _player.SetVelocity(new Vector2(0, _player.PlayerRigidbody2D.velocity.y));
+        }
+        
+        JumpChecks();
     }
 
     public override void PhysicsUpdate()

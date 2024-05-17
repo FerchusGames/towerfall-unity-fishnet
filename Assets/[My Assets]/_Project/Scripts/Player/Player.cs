@@ -16,11 +16,11 @@ public class Player : NetworkBehaviour, ICloned
 {
     #region PLAYER STATE MACHINE
 
-    private PlayerStateMachine _stateMachine;
-    private PlayerMoveState _moveState;
-    private PlayerAttackState _attackState;
-    private PlayerDashState _dashState;
-    private PlayerDeadState _deadState;
+    public PlayerStateMachine StateMachine { get; private set; }
+    public PlayerMoveState MoveState  { get; private set; }
+    public PlayerAttackState AttackState  { get; private set; }
+    public PlayerDashState DashState  { get; private set; }
+    public PlayerDeadState DeadState  { get; private set; }
 
     #endregion
 
@@ -55,8 +55,14 @@ public class Player : NetworkBehaviour, ICloned
     [field:SerializeField] public float JumpHangTimeThreshold { get; private set; } = default;
     [field:SerializeField] public float JumpHangAccelerationMultiplier { get; private set; } = default;
     [field:SerializeField] public float JumpHangMaxSpeedMultiplier { get; private set; } = default;
+    
+    
+    // Network cache
     private bool _jumpKeyDownCache;
     private bool _jumpKeyUpCache;
+
+    private bool _shootKeyDownChache;
+    private bool _shootKeyUpCache;
 
     [field:Header("Dashing")] 
     [field:SerializeField] public float DashSpeed { get; private set; } = default;
@@ -96,12 +102,14 @@ public class Player : NetworkBehaviour, ICloned
     
     private void Awake()
     {
-        _stateMachine = new PlayerStateMachine();
+        StateMachine = new PlayerStateMachine();
 
-        _moveState = new PlayerMoveState(this, _stateMachine);
-        _attackState = new PlayerAttackState(this, _stateMachine);
-        _dashState = new PlayerDashState(this, _stateMachine);
-        _deadState = new PlayerDeadState(this, _stateMachine);
+        MoveState = new PlayerMoveState(this, StateMachine);
+        AttackState = new PlayerAttackState(this, StateMachine);
+        DashState = new PlayerDashState(this, StateMachine);
+        DeadState = new PlayerDeadState(this, StateMachine);
+        
+        StateMachine.Initialize(MoveState);
         
         PlayerRigidbody2D = GetComponent<Rigidbody2D>();
     }
@@ -111,8 +119,6 @@ public class Player : NetworkBehaviour, ICloned
         IsFacingRight = true;
         IsDead = false;
         SetGravityScale(GravityScale);
-        
-        _stateMachine.Initialize(_moveState);
     }
 
     public void SetAnimators(Animator[] animators)
@@ -127,13 +133,14 @@ public class Player : NetworkBehaviour, ICloned
     {
         UpdateTimers();
         GroundCheck();
+        GravityShifts();
         SetAnimatorParameters();
         LocalInput();
     }
 
     private void FixedUpdate()
     {
-        _stateMachine.CurrentPlayerState.PhysicsUpdate();
+        StateMachine.CurrentPlayerState.PhysicsUpdate();
     }
     
     private void CheckDirectionToFace(bool isMovingRight)
@@ -158,14 +165,22 @@ public class Player : NetworkBehaviour, ICloned
     public struct InputData : IReplicateData
     {
         public Vector2 Joystick;
-        public bool JumpDown;
-        public bool JumpUp;
+        
+        public bool JumpKeyDown;
+        public bool JumpKeyUp;
 
-        public InputData(Vector2 joystick, bool jumpDown, bool jumpUp)
+        public bool ShootKeyDown;
+        public bool ShootKeyUp;
+            
+        public InputData(Vector2 joystick, 
+            bool jumpKeyDown, bool jumpKeyUp,
+            bool shootKeyDown, bool shootKeyUp)
         {
             Joystick = joystick;
-            JumpDown = jumpDown;
-            JumpUp = jumpUp;
+            JumpKeyDown = jumpKeyDown;
+            JumpKeyUp = jumpKeyUp;
+            ShootKeyDown = shootKeyDown;
+            ShootKeyUp = shootKeyUp;
             tick = 0; // Fishnet puts the correct value later
         }
         
@@ -244,13 +259,22 @@ public class Player : NetworkBehaviour, ICloned
             return default;
 
         Vector2 joystick = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-        InputData inputData = new InputData(joystick, _jumpKeyDownCache, _jumpKeyUpCache);
-        _jumpKeyDownCache = false;
-        _jumpKeyUpCache = false;
+        InputData inputData = new InputData(joystick, _jumpKeyDownCache, _jumpKeyUpCache, 
+            _shootKeyDownChache, _shootKeyUpCache);
+        
+        ResetNetworkChache();
 
         return inputData;
     }
-    
+
+    private void ResetNetworkChache()
+    {
+        _jumpKeyDownCache = false;
+        _jumpKeyUpCache = false;
+        _shootKeyDownChache = false;
+        _shootKeyUpCache = false;
+    }
+
     // We can use CollisionEnter, Exit, etc, BUT they will be called multiple times.
     // We CAN'T use STAY 
     
@@ -276,16 +300,14 @@ public class Player : NetworkBehaviour, ICloned
     [Reconcile] // Function that is replicated in clients to adjust according to the server results
     void Reconciliation(ReconciliationData reconciliationData, Channel channel = Channel.Unreliable)
     {
-        
         // We position and rotate the Rigidbody with the server results
         PlayerRigidbody2D.position = reconciliationData.Position;
         transform.position = reconciliationData.Position;
         
-        if (!base.IsOwner)
+        if (base.IsOwner)
         {
             print($"Reconciliation Position: {reconciliationData.Position}");
-            print($"Current RigiPosition: {PlayerRigidbody2D.position}");
-            print($"Current TransformPosition: {transform.position}");
+            print($"Reconciliation Velocity: {reconciliationData.Velocity}");
         }
 
         PlayerRigidbody2D.velocity = reconciliationData.Velocity;
@@ -303,7 +325,7 @@ public class Player : NetworkBehaviour, ICloned
     private void NetworkUpdate(InputData input, ReplicateState state = ReplicateState.Invalid, Channel channel = Channel.Unreliable)
     {
         NetworkInput(input);
-        _stateMachine.CurrentPlayerState.FrameUpdate(input);
+        StateMachine.CurrentPlayerState.FrameUpdate(input);
     }
 
     private void NetworkInput(InputData input)
@@ -313,12 +335,12 @@ public class Player : NetworkBehaviour, ICloned
             CheckDirectionToFace(input.Joystick.x > 0);
         }
 
-        if (input.JumpDown)
+        if (input.JumpKeyDown)
         {
             OnJumpInput();
         }
 
-        if (input.JumpUp)
+        if (input.JumpKeyUp)
         {
             OnJumpUpInput();
         }
@@ -336,6 +358,16 @@ public class Player : NetworkBehaviour, ICloned
             if (Input.GetKeyUp(KeyCode.Space))
             {
                 _jumpKeyUpCache = true;
+            }
+
+            if (Input.GetKeyDown(KeyCode.LeftArrow))
+            {
+                _shootKeyDownChache = true;
+            }
+            
+            if (Input.GetKeyUp(KeyCode.LeftArrow))
+            {
+                _shootKeyUpCache = true;
             }
         }
     }
@@ -418,11 +450,60 @@ public class Player : NetworkBehaviour, ICloned
     }
     #endregion
     
+    #region GRAVITY
+
+    private void GravityShifts()
+    {
+        // Make player fall faster if holding down S
+        if (PlayerRigidbody2D.velocity.y < 0 && _inputData.Joystick.y < 0)
+        {
+            SetGravityScale(GravityScale * FallGravityMultiplier);
+            FallSpeedCap(MaxFastFallSpeed);
+        }
+
+        // Scale gravity up if jump button released
+        else if (IsJumpCut)
+        {
+            SetGravityScale(GravityScale * JumpCutGravityMultiplier);
+            FallSpeedCap(MaxFallSpeed);
+        }
+
+        // Higher gravity when near jump height apex
+        else if ((IsJumping || IsJumpFalling) && Mathf.Abs(PlayerRigidbody2D.velocity.y) < JumpHangTimeThreshold)
+        {
+            SetGravityScale(GravityScale * JumpHangGravityMultiplier);
+        }
+
+        // Higher gravity if falling
+        else if (PlayerRigidbody2D.velocity.y < 0)
+        {
+            SetGravityScale(GravityScale * FallGravityMultiplier);
+            FallSpeedCap(MaxFallSpeed);
+        }
+
+        // Reset gravity
+        else
+        {
+            SetGravityScale(GravityScale);
+        }
+    }
+
+    #endregion
+
+    #region State Functions
+
+    public void SetVelocity(Vector2 velocity)
+    {
+        PlayerRigidbody2D.velocity = velocity;
+    }
+
+    #endregion
+    
     #region Animation Triggers
 
     private void AnimationTriggerEvent(AnimationTriggerType triggerType)
     {
-        _stateMachine.CurrentPlayerState.AnimationTriggerEvent(triggerType);
+        StateMachine.CurrentPlayerState.AnimationTriggerEvent(triggerType);
     }
     
     public enum AnimationTriggerType

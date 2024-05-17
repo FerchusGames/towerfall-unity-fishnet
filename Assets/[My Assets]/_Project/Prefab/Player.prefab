@@ -243,8 +243,8 @@ MonoBehaviour:
   LastOnGroundTime: 0
   LastPressedJumpTime: 0
   <RunMaxSpeed>k__BackingField: 10
-  <RunAccelerationRate>k__BackingField: 100
-  <RunDecelerationRate>k__BackingField: 200
+  <RunAccelerationRate>k__BackingField: 20
+  <RunDecelerationRate>k__BackingField: 25
   <AirAccelerationMultiplier>k__BackingField: 0.5
   <AirDecelerationMultiplier>k__BackingField: 0.75
   <JumpForce>k__BackingField: 16.3
@@ -332,7 +332,7 @@ MonoBehaviour:
   _ownerInterpolation: 1
   _enableTeleport: 1
   _teleportThreshold: 1
-  <PrefabId>k__BackingField: 0
+  <PrefabId>k__BackingField: 2
   <SpawnableCollectionId>k__BackingField: 0
   _scenePathHash: 0
   <SceneId>k__BackingField: 0

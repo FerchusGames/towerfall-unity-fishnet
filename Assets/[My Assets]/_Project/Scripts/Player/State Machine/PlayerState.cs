@@ -1,6 +1,7 @@
 using FishNet.Object.Prediction;
 using FishNet.Object;
 using FishNet.Transporting;
+using UnityEngine;
 
 public class PlayerState
 {
@@ -29,4 +30,65 @@ public class PlayerState
     [Replicate]
     public virtual void PhysicsUpdate() { }
     public virtual void AnimationTriggerEvent(Player.AnimationTriggerType triggerType) { }
+    
+    #region JUMP CHECKS
+
+    protected void JumpChecks()
+    {
+        JumpingCheck();
+        JumpCutCheck();
+
+        if (_player.CanJump() && _player.LastPressedJumpTime > 0)
+        {
+            _player.IsJumping = true;
+            _player.IsJumpCut = false;
+            _player.IsJumpFalling = false;
+            Jump();
+        }
+    }
+
+    private void JumpingCheck()
+    {
+        if (_player.IsJumping && _player.PlayerRigidbody2D.velocity.y < 0)
+        {
+            _player.IsJumping = false;
+
+            _player.IsJumpFalling = true;
+        }
+    }
+
+    private void JumpCutCheck()
+    {
+        if (_player.LastOnGroundTime > 0 && !_player.IsJumping)
+        {
+            _player.IsJumpCut = false;
+            _player.IsJumpFalling = false; // Logic failure in the original script?
+        }
+    }
+    
+    #endregion
+    
+    #region JUMP METHODS
+
+    private void Jump()
+    {
+        JumpResetTimers();
+
+        float force = _player.JumpForce;
+
+        if (_player.PlayerRigidbody2D.velocity.y < 0)
+        {
+            force -= _player.PlayerRigidbody2D.velocity.y; // To always jump the same amount.
+        }
+
+        _player.PlayerRigidbody2D.AddForce(Vector2.up * force, ForceMode2D.Impulse);
+    }
+
+    private void JumpResetTimers()
+    {
+        _player.LastPressedJumpTime = 0;
+        _player.LastOnGroundTime = 0;
+    }
+
+    #endregion
 }
