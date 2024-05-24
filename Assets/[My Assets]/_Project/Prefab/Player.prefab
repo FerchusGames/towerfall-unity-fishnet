@@ -244,8 +244,8 @@ MonoBehaviour:
   LastOnGroundTime: 0
   LastPressedJumpTime: 0
   <RunMaxSpeed>k__BackingField: 10
-  <RunAccelerationRate>k__BackingField: 20
-  <RunDecelerationRate>k__BackingField: 25
+  <RunAccelerationRate>k__BackingField: 100
+  <RunDecelerationRate>k__BackingField: 100
   <AirAccelerationMultiplier>k__BackingField: 0.5
   <AirDecelerationMultiplier>k__BackingField: 0.75
   <JumpForce>k__BackingField: 16.3

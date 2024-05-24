@@ -15,14 +15,11 @@ public class ProjectileMovement : NetworkBehaviour
     
     private Rigidbody2D _rigidbody2D;
 
-    private Vector2 _startPosition;
-
     readonly private SyncVar<ReconciliationData> reconciliationData = new SyncVar<ReconciliationData>();
     
     private void Awake()
     {
         _rigidbody2D = GetComponent<Rigidbody2D>();
-        _startPosition = transform.position;
 
         reconciliationData.UpdateSendRate(0.2f);
         reconciliationData.OnChange += OnReconciliationDataChange;

@@ -136,7 +136,6 @@ public class Player : NetworkBehaviour, ICloned
     
     private void Update()
     {
-        UpdateTimers();
         GroundCheck();
         GravityShifts();
         SetAnimatorParameters();
@@ -208,18 +207,22 @@ public class Player : NetworkBehaviour, ICloned
     {
         public Vector3 Position;
         public Vector3 Velocity;
-        public Quaternion Rotation;
-        public Vector3 AngularVelocity;
+        public float LastOnGroundTime;
+        public float LastPressedJumpTime;
+        public bool IsJumping;
+        public bool IsJumpCut;
         
         // Life, we can use a syncvar
         // Variables that affect the movement
 
-        public ReconciliationData(Vector3 position, Quaternion rotation, Vector3 velocity, Vector3 angularVelocity)
+        public ReconciliationData(Vector3 position, Vector3 velocity, float lastOnGroundTime, float lastPressedJumpTime, bool isJumping, bool isJumpCut)
         {
             Position = position;
             Velocity = velocity;
-            Rotation = rotation;
-            AngularVelocity = angularVelocity;
+            LastOnGroundTime = lastOnGroundTime;
+            LastPressedJumpTime = lastPressedJumpTime;
+            IsJumping = isJumping;
+            IsJumpCut = isJumpCut;
             tick = 0; // Fishnet deals with assigning the value, we just equal to 0 to prevent C# from throwing errors.
         }
         
@@ -298,10 +301,12 @@ public class Player : NetworkBehaviour, ICloned
         {
             ReconciliationData reconciliationData = new ReconciliationData(
                 PlayerRigidbody2D.position,
-                Quaternion.identity, 
                 PlayerRigidbody2D.velocity,
-                Vector3.zero);
-            Reconciliation(reconciliationData);
+                LastOnGroundTime,
+                LastPressedJumpTime,
+                IsJumping,
+                IsJumpCut);
+            Reconciliation(reconciliationData); 
         }
     }
 
@@ -319,10 +324,8 @@ public class Player : NetworkBehaviour, ICloned
         }
 
         PlayerRigidbody2D.velocity = reconciliationData.Velocity;
-        
-        // We are using 2D rigidbodies, so no problemo
-        //PlayerRigidbody2D.rotation = reconciliationData.Rotation;
-        //PlayerRigidbody2D.angularVelocity = reconciliationData.AngularVelocity;
+        LastOnGroundTime = reconciliationData.LastOnGroundTime;
+        LastPressedJumpTime = reconciliationData.LastPressedJumpTime;
     }
     
     #endregion
@@ -332,6 +335,7 @@ public class Player : NetworkBehaviour, ICloned
     [Replicate]
     private void NetworkUpdate(InputData input, ReplicateState state = ReplicateState.Invalid, Channel channel = Channel.Unreliable)
     {
+        UpdateTimers();
         NetworkInput(input);
         StateMachine.CurrentPlayerState.FrameUpdate(input);
     }
@@ -453,8 +457,9 @@ public class Player : NetworkBehaviour, ICloned
     #region TIMERS
     private void UpdateTimers()
     {
-        LastOnGroundTime -= Time.deltaTime;
-        LastPressedJumpTime -= Time.deltaTime;
+        float delta = (float)TimeManager.TickDelta;
+        LastOnGroundTime -= delta;
+        LastPressedJumpTime -= delta;
     }
     #endregion
     
