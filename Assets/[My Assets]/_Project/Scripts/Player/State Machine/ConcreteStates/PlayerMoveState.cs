@@ -1,3 +1,4 @@
+using FishNet;
 using UnityEngine;
 using FishNet.Object;
 using FishNet.Transporting;
@@ -25,7 +26,7 @@ public class PlayerMoveState : PlayerState
             _playerStateMachine.ChangeState(_player.AttackState);
         }
         
-        JumpChecks();
+        JumpChecks(state);
         Run();
     }
 

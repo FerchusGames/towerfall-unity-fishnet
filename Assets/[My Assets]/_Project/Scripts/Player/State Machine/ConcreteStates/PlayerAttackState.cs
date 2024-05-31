@@ -46,7 +46,7 @@ public class PlayerAttackState : PlayerState
             _player.SetVelocity(new Vector2(0, _player.PlayerRigidbody2D.velocity.y));
         }
         
-        JumpChecks();
+        JumpChecks(state);
     }
 
     public override void PhysicsUpdate()

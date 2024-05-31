@@ -1,3 +1,5 @@
+using FishNet;
+using FishNet.Managing.Timing;
 using FishNet.Object.Prediction;
 using FishNet.Object;
 using FishNet.Transporting;
@@ -33,7 +35,7 @@ public class PlayerState
     
     #region JUMP CHECKS
 
-    protected void JumpChecks()
+    protected void JumpChecks(ReplicateState state)
     {
         JumpingCheck();
         JumpCutCheck();
@@ -43,6 +45,7 @@ public class PlayerState
             _player.IsJumping = true;
             _player.IsJumpCut = false;
             _player.IsJumpFalling = false;
+            Debug.Log($"Jump on Tick: {_inputData.GetTick()}, State: {state}, {Time.time}");
             Jump();
         }
     }

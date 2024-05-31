@@ -5,6 +5,7 @@
 
 */
 
+using FishNet;
 using FishNet.Object;
 using FishNet.Object.Prediction;
 using FishNet.Transporting;
@@ -136,9 +137,6 @@ public class Player : NetworkBehaviour, ICloned
     
     private void Update()
     {
-        GroundCheck();
-        GravityShifts();
-        SetAnimatorParameters();
         LocalInput();
     }
 
@@ -273,6 +271,11 @@ public class Player : NetworkBehaviour, ICloned
         InputData inputData = new InputData(base.OwnerId, joystick, _jumpKeyDownCache, _jumpKeyUpCache, 
             _shootKeyDownChache, _shootKeyUpCache);
         
+        if (_jumpKeyDownCache)
+        {
+            Debug.Log($"Buid Input Jump Input: {base.TimeManager.Tick}");
+        }
+        
         ResetNetworkChache();
 
         return inputData;
@@ -326,6 +329,8 @@ public class Player : NetworkBehaviour, ICloned
         PlayerRigidbody2D.velocity = reconciliationData.Velocity;
         LastOnGroundTime = reconciliationData.LastOnGroundTime;
         LastPressedJumpTime = reconciliationData.LastPressedJumpTime;
+        IsJumping = reconciliationData.IsJumping;
+        IsJumpCut = reconciliationData.IsJumpCut;
     }
     
     #endregion
@@ -337,7 +342,10 @@ public class Player : NetworkBehaviour, ICloned
     {
         UpdateTimers();
         NetworkInput(input);
-        StateMachine.CurrentPlayerState.FrameUpdate(input);
+        GroundCheck();
+        GravityShifts(input);
+        SetAnimatorParameters();
+        StateMachine.CurrentPlayerState.FrameUpdate(input, state, channel);
     }
 
     private void NetworkInput(InputData input)
@@ -364,6 +372,7 @@ public class Player : NetworkBehaviour, ICloned
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
+                Debug.Log($"Local Jump Input: {base.TimeManager.Tick}, {Time.time}");
                 _jumpKeyDownCache = true;
             }
             
@@ -465,10 +474,10 @@ public class Player : NetworkBehaviour, ICloned
     
     #region GRAVITY
 
-    private void GravityShifts()
+    private void GravityShifts(InputData inputData)
     {
         // Make player fall faster if holding down S
-        if (PlayerRigidbody2D.velocity.y < 0 && _inputData.Joystick.y < 0)
+        if (PlayerRigidbody2D.velocity.y < 0 && inputData.Joystick.y < 0)
         {
             SetGravityScale(GravityScale * FallGravityMultiplier);
             FallSpeedCap(MaxFastFallSpeed);
