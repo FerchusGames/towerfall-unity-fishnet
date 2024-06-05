@@ -12,7 +12,8 @@ namespace PlayFlow
 {
     public class PlayFlowManager : MonoBehaviour
     {
-
+        static public string status;
+        
         private static TicketStatusResponse ExtractStatus(string jsonResponse)
         {
             TicketStatusResponse response = JsonUtility.FromJson<TicketStatusResponse>(jsonResponse);
@@ -170,6 +171,7 @@ namespace PlayFlow
                 {
                     Debug.Log($"Get Status: {statusResponse}");
                     TicketStatusResponse ticket = ExtractStatus(statusResponse); // Implement ExtractStatus method
+                    status = ticket.status;
                     if (ticket == null)
                     {
                         //Throw an error

@@ -150,13 +150,22 @@ public class Player : NetworkBehaviour, ICloned
     {
         if (_playerScore.Value >= 5)
         {
+            if (!IsServerInitialized)
+            {
+                Time.timeScale = 0;
+            }
+            
+            GameManager.Instance.ResultsBackground.gameObject.SetActive(true);
+            
             if (IsOwner)
             {
-                Debug.Log("You've Won");
+                GameManager.Instance.ResultsBackground.color = new Color(0.1f, 0.1f, 0.5f);
+                GameManager.Instance.ResultsScoreText.text = "You've Won!";
             }
             else
             {
-                Debug.Log("You've Lost");
+                GameManager.Instance.ResultsBackground.color = new Color(0.5f, 0.1f, 0.1f);
+                GameManager.Instance.ResultsScoreText.text = "You've Lost!";
             }
         }
     }

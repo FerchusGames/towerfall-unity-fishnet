@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -12,6 +14,9 @@ public class GameManager : MonoBehaviour
 
     [field: SerializeField] public TextMeshProUGUI YourScoreText { get; private set; }
     [field: SerializeField] public TextMeshProUGUI OpponentScoreText { get; private set; }
+    [field: SerializeField] public Image ResultsBackground { get; private set; }
+    [field: SerializeField] public TextMeshProUGUI ResultsScoreText { get; private set; }
+    
 
     private void Awake()
     {
@@ -22,6 +27,11 @@ public class GameManager : MonoBehaviour
             }
     
             Instance = this;
-            DontDestroyOnLoad(gameObject);
+    }
+
+    public void GoToMenu()
+    {
+        Time.timeScale = 1;
+        SceneManager.LoadScene("Menu");
     }
 }

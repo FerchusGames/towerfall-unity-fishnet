@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using FishNet.Managing;
 using PlayFlow;
@@ -5,6 +6,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class Matchmaking : MonoBehaviour
 {
@@ -45,6 +47,12 @@ public class Matchmaking : MonoBehaviour
 
         StartCoroutine(PlayFlowManager.FindMatch(clientToken, playerData, OnMatchFound));
         _searchButton.interactable = false; // We turn off the button to prevent the player from enqueing multiple times
+    }
+
+    private void Update()
+    {
+        if (PlayFlowManager.status == "In Queue")
+            _statusText.text = PlayFlowManager.status;
     }
 
     private void OnMatchFound(Server server)
