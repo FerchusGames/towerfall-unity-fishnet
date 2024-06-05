@@ -145,7 +145,7 @@ public class ProjectileMovement : NetworkBehaviour
         
         if (other.gameObject != OwnerGameObject && other.gameObject.CompareTag("Player"))
         {
-            Debug.Log($"A point has been awarded to {ownerId}");
+            OwnerGameObject.GetComponent<Player>().AddScore();
         }
         
         Despawn();

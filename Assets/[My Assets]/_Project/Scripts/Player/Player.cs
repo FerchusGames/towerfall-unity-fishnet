@@ -5,19 +5,23 @@
 
 */
 
+using System;
 using FishNet;
 using FishNet.Object;
 using FishNet.Object.Prediction;
+using FishNet.Object.Synchronizing;
 using FishNet.Transporting;
-using TreeEditor;
-using Unity.Mathematics;
+using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class Player : NetworkBehaviour, ICloned
 {
     #region PLAYER STATE MACHINE
 
+    readonly private SyncVar<int> _playerScore = new SyncVar<int>();
+
+    [SerializeField] private TextMeshProUGUI _scoreText;
+    
     public PlayerStateMachine StateMachine { get; private set; }
     public PlayerMoveState MoveState  { get; private set; }
     public PlayerAttackState AttackState  { get; private set; }
@@ -120,13 +124,50 @@ public class Player : NetworkBehaviour, ICloned
         PlayerRigidbody2D = GetComponent<Rigidbody2D>();
     }
 
+    private void OnEnable()
+    {
+        _playerScore.OnChange += OnScoreChange;
+    }
+
+    private void OnDisable()
+    {
+        _playerScore.OnChange -= OnScoreChange;
+    }
+
+    public void AddScore()
+    {
+        _playerScore.Value++;
+    }
+
+    private void OnScoreChange(int oldValue, int newValue, bool isServer)
+    {
+        _scoreText.text = newValue.ToString();
+        
+        CheckScore();
+    }
+
+    private void CheckScore()
+    {
+        if (_playerScore.Value >= 5)
+        {
+            if (IsOwner)
+            {
+                Debug.Log("You've Won");
+            }
+            else
+            {
+                Debug.Log("You've Lost");
+            }
+        }
+    }
+    
     private void Start()
     {
         IsFacingRight = true;
         IsDead = false;
         SetGravityScale(GravityScale);
     }
-
+    
     public void SetAnimators(Animator[] animators)
     {
         for (int i = 0; i < 5; i++)
@@ -247,6 +288,16 @@ public class Player : NetworkBehaviour, ICloned
         if (base.Owner.IsLocalClient)
         {
             gameObject.name += " - Local";
+        }
+        
+        if (base.Owner.IsLocalClient)
+        {
+            _scoreText = GameManager.Instance.YourScoreText;
+        }
+
+        else
+        {
+            _scoreText = GameManager.Instance.OpponentScoreText;
         }
     }
 

@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/[My Assets]/_Project/Scenes/Exam/Examen 3.unity
-    guid: 2cda990e2423bbf4892e6590ba056729
+    path: Assets/[My Assets]/_Project/Scenes/Towerfall/Menu.unity
+    guid: cbfdc99dd0800bd4cbda19186533bccc
+  - enabled: 1
+    path: Assets/[My Assets]/_Project/Scenes/Towerfall/Map 1.unity
+    guid: 58c1bd4f0b2847f44b7b102d5fb9ebda
   m_configObjects: {}

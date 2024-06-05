@@ -131,6 +131,7 @@ namespace FishNet.Managing.Predicting
         /// <param name="scene"></param>
         /// <returns></returns>
         public bool IsReplaying(UnityScene scene) => _replayingScenes.Contains(scene);
+            
 #else
         /// <summary>
         /// True if client timing needs to be reduced. This is fine-tuning of the prediction system.
