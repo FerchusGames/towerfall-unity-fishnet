@@ -340,7 +340,7 @@ MonoBehaviour:
   _graphicalObject: {fileID: 677109642169047125}
   _enableStateForwarding: 1
   _networkTransform: {fileID: 0}
-  _ownerInterpolation: 2
+  _ownerInterpolation: 15
   _enableTeleport: 1
   _teleportThreshold: 1
   <PrefabId>k__BackingField: 2
