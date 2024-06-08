@@ -5,6 +5,8 @@ using FishNet.Object;
 using FishNet.Transporting;
 public class PlayerAttackState : PlayerState
 {
+    private float _attackTimer;
+    
     public PlayerAttackState(Player player, PlayerStateMachine playerStateMachine) : base(player, playerStateMachine)
     {
     }
@@ -18,8 +20,12 @@ public class PlayerAttackState : PlayerState
     {
         base.ExitState();
 
+        if (_player.LastAttackTime > 0)
+            return;
+        
         if (InstanceFinder.NetworkManager.IsServerStarted && _inputData.Joystick != Vector2.zero)
         {
+            _player.LastAttackTime = _player.ArrowSpawnInterval;
             Vector2 shootingDirection = _inputData.Joystick.normalized;
 
             GameObject arrow = _player.ArrowPrefab;

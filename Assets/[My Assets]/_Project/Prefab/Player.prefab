@@ -245,6 +245,7 @@ MonoBehaviour:
   IsJumping: 0
   IsJumpCut: 0
   IsJumpFalling: 0
+  LastAttackTime: 0
   LastOnGroundTime: 0
   LastPressedJumpTime: 0
   <RunMaxSpeed>k__BackingField: 10
@@ -273,6 +274,7 @@ MonoBehaviour:
   <GroundCheckSize>k__BackingField: {x: 1, y: 0.03}
   <ArrowPrefab>k__BackingField: {fileID: 4834802896249470314, guid: 26f1f1a643f45c64c90ca27df11c16fe, type: 3}
   <ArrowSpawnPoint>k__BackingField: {fileID: 3819010156052760649}
+  <ArrowSpawnInterval>k__BackingField: 0.5
   <GroundLayer>k__BackingField:
     serializedVersion: 2
     m_Bits: 8
@@ -320,6 +322,7 @@ MonoBehaviour:
   - {fileID: 2264282644866462326}
   - {fileID: 1538350437284599315}
   - {fileID: 7467914129910776927}
+  - {fileID: 7151272215520786682}
   <SerializedRootNetworkBehaviour>k__BackingField: {fileID: 0}
   <NestedRootNetworkBehaviours>k__BackingField: []
   SerializedTransformProperties:
@@ -395,9 +398,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03002f7d324007e41b10a9dc87ed3c38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 255
+  _componentIndexCache: 3
   _addedNetworkObject: {fileID: 6305568478225572348}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 6305568478225572348}
   _allowTakeOwnership: 1
 --- !u!1 &3508798231564101672
 GameObject:

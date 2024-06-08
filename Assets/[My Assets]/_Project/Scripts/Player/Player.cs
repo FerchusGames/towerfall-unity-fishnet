@@ -44,6 +44,7 @@ public class Player : NetworkBehaviour, ICloned
     public bool IsJumpFalling;
 
     // Timers
+    public float LastAttackTime;
     public float LastOnGroundTime;
     public float LastPressedJumpTime;
 
@@ -93,6 +94,7 @@ public class Player : NetworkBehaviour, ICloned
     [field:Header("Combat")]
     [field:SerializeField] public GameObject ArrowPrefab { get; private set; }
     [field:SerializeField] public Transform ArrowSpawnPoint { get; private set; }
+    [field:SerializeField] public float ArrowSpawnInterval { get; private set; } = default;
     
     [field:Header("Layers & Tags")] 
     [field:SerializeField] public LayerMask GroundLayer { get; private set; } = default;
@@ -258,18 +260,20 @@ public class Player : NetworkBehaviour, ICloned
         public Vector3 Velocity;
         public float LastOnGroundTime;
         public float LastPressedJumpTime;
+        public float LastAttackTime;
         public bool IsJumping;
         public bool IsJumpCut;
         
         // Life, we can use a syncvar
         // Variables that affect the movement
 
-        public ReconciliationData(Vector3 position, Vector3 velocity, float lastOnGroundTime, float lastPressedJumpTime, bool isJumping, bool isJumpCut)
+        public ReconciliationData(Vector3 position, Vector3 velocity, float lastOnGroundTime, float lastPressedJumpTime, float lastAttackTime,  bool isJumping, bool isJumpCut)
         {
             Position = position;
             Velocity = velocity;
             LastOnGroundTime = lastOnGroundTime;
             LastPressedJumpTime = lastPressedJumpTime;
+            LastAttackTime = lastAttackTime;
             IsJumping = isJumping;
             IsJumpCut = isJumpCut;
             tick = 0; // Fishnet deals with assigning the value, we just equal to 0 to prevent C# from throwing errors.
@@ -365,6 +369,7 @@ public class Player : NetworkBehaviour, ICloned
                 PlayerRigidbody2D.velocity,
                 LastOnGroundTime,
                 LastPressedJumpTime,
+                LastAttackTime,
                 IsJumping,
                 IsJumpCut);
             Reconciliation(reconciliationData); 
@@ -387,6 +392,7 @@ public class Player : NetworkBehaviour, ICloned
         PlayerRigidbody2D.velocity = reconciliationData.Velocity;
         LastOnGroundTime = reconciliationData.LastOnGroundTime;
         LastPressedJumpTime = reconciliationData.LastPressedJumpTime;
+        LastAttackTime = reconciliationData.LastAttackTime;
         IsJumping = reconciliationData.IsJumping;
         IsJumpCut = reconciliationData.IsJumpCut;
     }
@@ -527,6 +533,7 @@ public class Player : NetworkBehaviour, ICloned
         float delta = (float)TimeManager.TickDelta;
         LastOnGroundTime -= delta;
         LastPressedJumpTime -= delta;
+        LastAttackTime -= delta;
     }
     #endregion
     
