@@ -34,6 +34,7 @@ public class Player : NetworkBehaviour, ICloned
 
     public Rigidbody2D PlayerRigidbody2D { get; private set; }
     public Animator[] Animators { get; private set; } = new Animator[5];
+    [SerializeField] private SpriteRenderer _spriteRenderer;
 
     // State Control
     public bool IsDead;
@@ -297,16 +298,13 @@ public class Player : NetworkBehaviour, ICloned
         if (base.Owner.IsLocalClient)
         {
             gameObject.name += " - Local";
-        }
-        
-        if (base.Owner.IsLocalClient)
-        {
             _scoreText = GameManager.Instance.YourScoreText;
         }
 
         else
         {
             _scoreText = GameManager.Instance.OpponentScoreText;
+            _spriteRenderer.color = Color.red;
         }
     }
 
