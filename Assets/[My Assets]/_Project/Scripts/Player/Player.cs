@@ -21,6 +21,7 @@ public class Player : NetworkBehaviour, ICloned
     readonly private SyncVar<int> _playerScore = new SyncVar<int>();
 
     [SerializeField] private TextMeshProUGUI _scoreText;
+    [SerializeField] private SpriteRenderer _arrowSprite;
     
     public PlayerStateMachine StateMachine { get; private set; }
     public PlayerMoveState MoveState  { get; private set; }
@@ -534,6 +535,8 @@ public class Player : NetworkBehaviour, ICloned
         LastOnGroundTime -= delta;
         LastPressedJumpTime -= delta;
         LastAttackTime -= delta;
+
+        _arrowSprite.enabled = LastAttackTime <= 0;
     }
     #endregion
     

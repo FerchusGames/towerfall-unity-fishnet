@@ -141,7 +141,10 @@ public class ProjectileMovement : NetworkBehaviour
     private void OnCollisionEnter2D(Collision2D other)
     {
         if (!IsServerInitialized)
+        {
+            other.gameObject.SetActive(false);
             return;
+        }
         
         if (other.gameObject != OwnerGameObject && other.gameObject.CompareTag("Player"))
         {
