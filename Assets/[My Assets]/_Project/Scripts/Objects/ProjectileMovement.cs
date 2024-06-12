@@ -12,6 +12,7 @@ public class ProjectileMovement : NetworkBehaviour
     [SerializeField] private float _force;
     
     private Rigidbody2D _rigidbody2D;
+    [SerializeField] private SpriteRenderer _sprite;
 
     private const float MAX_PASSED_TIME = 0.3f;
     
@@ -142,7 +143,7 @@ public class ProjectileMovement : NetworkBehaviour
     {
         if (!IsServerInitialized)
         {
-            other.gameObject.SetActive(false);
+            _sprite.enabled = false;
             return;
         }
         

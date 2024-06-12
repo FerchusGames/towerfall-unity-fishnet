@@ -99,8 +99,6 @@ public class Player : NetworkBehaviour, ICloned
     
     [field:Header("Layers & Tags")] 
     [field:SerializeField] public LayerMask GroundLayer { get; private set; } = default;
-
-    private InputData _inputData;
     
     #endregion
     
@@ -321,8 +319,7 @@ public class Player : NetworkBehaviour, ICloned
     
     private void OnTick() // Good moment to send inputs
     {
-        _inputData = BuildInputData();
-        NetworkUpdate(_inputData);
+        NetworkUpdate(BuildInputData());
     }
     
     InputData BuildInputData()
@@ -406,10 +403,10 @@ public class Player : NetworkBehaviour, ICloned
     private void NetworkUpdate(InputData input, ReplicateState state = ReplicateState.Invalid, Channel channel = Channel.Unreliable)
     {
         UpdateTimers();
-        NetworkInput(input);
         GroundCheck();
         GravityShifts(input);
-        SetAnimatorParameters();
+        NetworkInput(input);
+        SetAnimatorParameters(input);
         StateMachine.CurrentPlayerState.FrameUpdate(input, state, channel);
     }
 
@@ -520,9 +517,9 @@ public class Player : NetworkBehaviour, ICloned
 
     #region ANIMATIONS
 
-    private void SetAnimatorParameters()
+    private void SetAnimatorParameters(InputData inputData)
     {
-        Animators.SetFloat(_ahSpeed, Mathf.Abs(_inputData.Joystick.x));
+        Animators.SetFloat(_ahSpeed, Mathf.Abs(inputData.Joystick.x));
         Animators.SetBool(_ahIsJumping, IsJumping || IsJumpFalling);
     }
     

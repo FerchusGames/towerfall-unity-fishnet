@@ -156,7 +156,7 @@ MonoBehaviour:
   _graphicalObject: {fileID: 8321369249241896574}
   _enableStateForwarding: 1
   _networkTransform: {fileID: 0}
-  _ownerInterpolation: 4
+  _ownerInterpolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
   <PrefabId>k__BackingField: 6
@@ -252,6 +252,7 @@ MonoBehaviour:
   _addedNetworkObject: {fileID: 2617533099041311595}
   _networkObjectCache: {fileID: 2617533099041311595}
   _force: 20
+  _sprite: {fileID: 6938385625382665607}
   OwnerGameObject: {fileID: 0}
   Direction: {x: 1, y: 0}
   ownerId: 0
