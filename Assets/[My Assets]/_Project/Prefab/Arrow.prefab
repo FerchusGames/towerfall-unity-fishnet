@@ -98,6 +98,7 @@ GameObject:
   - component: {fileID: 2832923757980363266}
   - component: {fileID: 4701673710377601847}
   - component: {fileID: 3419013662149854923}
+  - component: {fileID: -1510090833261248150}
   m_Layer: 0
   m_Name: Arrow
   m_TagString: Untagged
@@ -179,7 +180,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 0.3
+  m_GravityScale: 1.8
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -253,8 +254,9 @@ MonoBehaviour:
   _networkObjectCache: {fileID: 2617533099041311595}
   _force: 20
   _sprite: {fileID: 6938385625382665607}
+  _maxSpeed: 0
   OwnerGameObject: {fileID: 0}
-  Direction: {x: 1, y: 0}
+  Direction: {x: -1, y: 0}
   ownerId: 0
 --- !u!114 &3419013662149854923
 MonoBehaviour:
@@ -273,3 +275,15 @@ MonoBehaviour:
   _networkObjectCache: {fileID: 2617533099041311595}
   _allowSpawning: 1
   _allowDespawning: 1
+--- !u!114 &-1510090833261248150
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4834802896249470314}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40abc4f33c5d89546b9b2fa7a9a76396, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -6,6 +6,7 @@ using FishNet.Transporting;
 public class PlayerAttackState : PlayerState
 {
     private float _attackTimer;
+    private GameObject _arrowGameObject;
     
     public PlayerAttackState(Player player, PlayerStateMachine playerStateMachine) : base(player, playerStateMachine)
     {
@@ -34,6 +35,9 @@ public class PlayerAttackState : PlayerState
             projectileMovement.ownerId = _inputData.Id;
             projectileMovement.OwnerGameObject = _player.gameObject;
             arrow = GameObject.Instantiate(arrow, _player.ArrowSpawnPoint.position, Quaternion.identity);
+            if (_arrowGameObject)
+                InstanceFinder.ServerManager.Despawn(_arrowGameObject);
+            _arrowGameObject = arrow;
             InstanceFinder.ServerManager.Spawn(arrow, null);
         }
     }

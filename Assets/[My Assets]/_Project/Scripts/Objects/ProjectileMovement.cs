@@ -14,6 +14,8 @@ public class ProjectileMovement : NetworkBehaviour
     private Rigidbody2D _rigidbody2D;
     [SerializeField] private SpriteRenderer _sprite;
 
+    [SerializeField] private float _maxSpeed;
+    
     private const float MAX_PASSED_TIME = 0.3f;
     
     public GameObject OwnerGameObject;
@@ -137,8 +139,18 @@ public class ProjectileMovement : NetworkBehaviour
     private void Update()
     {
         RotateTowardsMovement();
+        ClampVelocity();
     }
-    
+
+    private void ClampVelocity()
+    {
+        if (_rigidbody2D.velocity.magnitude >= _force)
+        {
+            Vector2 clampedVelocity = _rigidbody2D.velocity.normalized * _force;
+            _rigidbody2D.velocity = clampedVelocity;
+        }
+    }
+
     private void OnCollisionEnter2D(Collision2D other)
     {
         if (!IsServerInitialized)

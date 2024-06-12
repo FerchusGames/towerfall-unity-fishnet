@@ -327,7 +327,7 @@ public class Player : NetworkBehaviour, ICloned
         if (!base.IsOwner) // If it isn't my character, we don't generate inputs
             return default;
 
-        Vector2 joystick = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+        Vector2 joystick = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
         InputData inputData = new InputData(base.OwnerId, joystick, _jumpKeyDownCache, _jumpKeyUpCache, 
             _shootKeyDownChache, _shootKeyUpCache);
         
