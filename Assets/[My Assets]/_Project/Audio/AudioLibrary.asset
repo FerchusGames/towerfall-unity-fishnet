@@ -29,3 +29,11 @@ MonoBehaviour:
     soundType: 5
     clip:
     - {fileID: 8300000, guid: 1d1b08397092ca14c8c16c90d1164b75, type: 3}
+  - audioLevel: 0.4
+    soundType: 2
+    clip:
+    - {fileID: 8300000, guid: 2706821387fc2fd45bf4908452fa8731, type: 3}
+  - audioLevel: 0.4
+    soundType: 3
+    clip:
+    - {fileID: 8300000, guid: b10cf21c697cedb4599d3947688f587f, type: 3}

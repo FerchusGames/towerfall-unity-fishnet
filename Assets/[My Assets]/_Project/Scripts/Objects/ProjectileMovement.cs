@@ -19,6 +19,7 @@ public class ProjectileMovement : NetworkBehaviour
     private const float MAX_PASSED_TIME = 0.3f;
     
     public GameObject OwnerGameObject;
+    private Player _player;
     public Vector2 Direction;
 
     public float ownerId = -1;
@@ -78,7 +79,12 @@ public class ProjectileMovement : NetworkBehaviour
             throw new System.NotImplementedException();
         }
     }
-    
+
+    private void Start()
+    {
+        _player = OwnerGameObject.GetComponent<Player>();
+    }
+
     public override void OnStartNetwork() // OnEnable
     {
         base.TimeManager.OnTick += OnTick;
@@ -162,6 +168,16 @@ public class ProjectileMovement : NetworkBehaviour
         if (other.gameObject != OwnerGameObject && other.gameObject.CompareTag("Player"))
         {
             OwnerGameObject.GetComponent<Player>().AddScore();
+            
+            if (_player.IsOwner)
+            {
+                AudioManager.GetInstance().SetAudio(SOUND_TYPE.DAMAGE_SELF);
+            }
+
+            else
+            {
+                AudioManager.GetInstance().SetAudio(SOUND_TYPE.DAMAGE_OPPONENT);
+            }
         }
         
         Despawn();
