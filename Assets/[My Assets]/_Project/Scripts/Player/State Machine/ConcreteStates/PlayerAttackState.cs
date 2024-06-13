@@ -23,22 +23,35 @@ public class PlayerAttackState : PlayerState
 
         if (_player.LastAttackTime > 0)
             return;
-        
-        if (InstanceFinder.NetworkManager.IsServerStarted && _inputData.Joystick != Vector2.zero)
-        {
-            _player.LastAttackTime = _player.ArrowSpawnInterval;
-            Vector2 shootingDirection = _inputData.Joystick.normalized;
 
-            GameObject arrow = _player.ArrowPrefab;
-            ProjectileMovement projectileMovement = arrow.GetComponent<ProjectileMovement>();
-            projectileMovement.Direction = shootingDirection;
-            projectileMovement.ownerId = _inputData.Id;
-            projectileMovement.OwnerGameObject = _player.gameObject;
-            arrow = GameObject.Instantiate(arrow, _player.ArrowSpawnPoint.position, Quaternion.identity);
-            if (_arrowGameObject)
-                InstanceFinder.ServerManager.Despawn(_arrowGameObject);
-            _arrowGameObject = arrow;
-            InstanceFinder.ServerManager.Spawn(arrow, null);
+        if (_inputData.Joystick != Vector2.zero)
+        {
+            if (InstanceFinder.NetworkManager.IsServerStarted)
+            {
+                _player.LastAttackTime = _player.ArrowSpawnInterval;
+                Vector2 shootingDirection = _inputData.Joystick.normalized;
+
+                GameObject arrow = _player.ArrowPrefab;
+                ProjectileMovement projectileMovement = arrow.GetComponent<ProjectileMovement>();
+                projectileMovement.Direction = shootingDirection;
+                projectileMovement.ownerId = _inputData.Id;
+                projectileMovement.OwnerGameObject = _player.gameObject;
+                arrow = GameObject.Instantiate(arrow, _player.ArrowSpawnPoint.position, Quaternion.identity);
+                if (_arrowGameObject)
+                    InstanceFinder.ServerManager.Despawn(_arrowGameObject);
+                _arrowGameObject = arrow;
+                InstanceFinder.ServerManager.Spawn(arrow, null);
+            }
+
+            if (_player.IsOwner)
+            {
+                AudioManager.GetInstance().SetAudio(SOUND_TYPE.SHOOT_SELF);
+            }
+
+            else
+            {
+                AudioManager.GetInstance().SetAudio(SOUND_TYPE.SHOOT_OPPONENT);
+            }
         }
     }
 
