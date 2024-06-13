@@ -152,26 +152,24 @@ public class ProjectileMovement : NetworkBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        // if (_firstTime)
-        // {
-        //     _firstTime = false;
-        //     return;
-        // }
-        
-        if (!IsServerInitialized)
+        if (other.gameObject == OwnerGameObject)
         {
-            _sprite.enabled = false;
+            return;   
         }
         
-        if (other.gameObject != OwnerGameObject && other.gameObject.CompareTag("Player"))
-        {
-            if (IsServerInitialized)
-                OwnerGameObject.GetComponent<Player>().AddScore();
-        }
-
         if (IsServerInitialized)
         {
+            if (other.gameObject.CompareTag("Player"))
+            {
+                OwnerGameObject.GetComponent<Player>().AddScore();
+            }
+            
             Despawn();
         }
+
+        // else
+        // {
+        //     _sprite.enabled = false;
+        // }
     }
 }

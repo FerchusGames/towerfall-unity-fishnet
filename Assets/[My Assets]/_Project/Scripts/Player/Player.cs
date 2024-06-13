@@ -145,6 +145,14 @@ public class Player : NetworkBehaviour, ICloned
     {
         _scoreText.text = newValue.ToString();
         
+        if (IsOwner)
+            AudioManager.GetInstance().SetAudio(SOUND_TYPE.DAMAGE_SELF);
+
+        else
+        {
+            AudioManager.GetInstance().SetAudio(SOUND_TYPE.DAMAGE_OPPONENT);
+        }
+        
         CheckScore();
     }
 

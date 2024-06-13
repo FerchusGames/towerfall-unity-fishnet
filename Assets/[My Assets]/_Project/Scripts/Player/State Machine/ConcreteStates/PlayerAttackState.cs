@@ -43,17 +43,14 @@ public class PlayerAttackState : PlayerState
                 InstanceFinder.ServerManager.Spawn(arrow, null);
             }
 
-            if (!_player.PredictionManager.IsReconciling)
+            if (_player.IsOwner && !_player.PredictionManager.IsReconciling)
             {
-                if (_player.IsOwner)
-                {
-                    AudioManager.GetInstance().SetAudio(SOUND_TYPE.SHOOT_SELF);
-                }
+                AudioManager.GetInstance().SetAudio(SOUND_TYPE.SHOOT_SELF);
+            }
 
-                else
-                {
-                    AudioManager.GetInstance().SetAudio(SOUND_TYPE.SHOOT_OPPONENT);
-                }
+            if (!_player.IsOwner)
+            { 
+                AudioManager.GetInstance().SetAudio(SOUND_TYPE.SHOOT_OPPONENT);
             }
         }
     }

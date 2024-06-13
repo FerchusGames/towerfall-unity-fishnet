@@ -4,6 +4,7 @@ using FishNet.Object;
 using System;
 using UnityEngine;
 using UnityEngine.Serialization;
+using Random = UnityEngine.Random;
 
 namespace FishNet.Component.Spawning
 {
@@ -50,7 +51,7 @@ namespace FishNet.Component.Spawning
         /// <summary>
         /// Next spawns to use.
         /// </summary>
-        private int _nextSpawn;
+        private int _nextSpawn = 999;
         #endregion
 
         private void Start()
@@ -121,6 +122,15 @@ namespace FishNet.Component.Spawning
                 SetSpawnUsingPrefab(prefab, out pos, out rot);
                 return;
             }
+            
+            int tempSpawn;
+
+            do
+            {
+                tempSpawn = Random.Range(0, Spawns.Length);
+            } while (tempSpawn == _nextSpawn);
+
+            _nextSpawn = tempSpawn;
 
             Transform result = Spawns[_nextSpawn];
             if (result == null)
@@ -134,9 +144,9 @@ namespace FishNet.Component.Spawning
             }
 
             //Increase next spawn and reset if needed.
-            _nextSpawn++;
-            if (_nextSpawn >= Spawns.Length)
-                _nextSpawn = 0;
+            // _nextSpawn++;
+            // if (_nextSpawn >= Spawns.Length)
+            //     _nextSpawn = 0;
         }
 
         /// <summary>
