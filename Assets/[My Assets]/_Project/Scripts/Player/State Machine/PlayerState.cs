@@ -86,14 +86,17 @@ public class PlayerState
 
         _player.PlayerRigidbody2D.AddForce(Vector2.up * force, ForceMode2D.Impulse);
 
-        if (_player.IsOwner)
+        if (!_player.PredictionManager.IsReconciling)
         {
-            AudioManager.GetInstance().SetAudio(SOUND_TYPE.JUMP_SELF);
-        }
+            if (_player.IsOwner)
+            {
+                AudioManager.GetInstance().SetAudio(SOUND_TYPE.JUMP_SELF);
+            }
         
-        else
-        {
-            AudioManager.GetInstance().SetAudio(SOUND_TYPE.JUMP_OPPONENT);    
+            else
+            {
+                AudioManager.GetInstance().SetAudio(SOUND_TYPE.JUMP_OPPONENT);    
+            }
         }
     }
 

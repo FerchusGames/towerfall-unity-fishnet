@@ -18,7 +18,6 @@ public class ProjectileMovement : NetworkBehaviour
     private const float MAX_PASSED_TIME = 0.3f;
     private bool _firstTime = true;
     public GameObject OwnerGameObject;
-    private Player _player;
     public Vector2 Direction;
 
     public float ownerId = -1;
@@ -77,11 +76,6 @@ public class ProjectileMovement : NetworkBehaviour
         {
             throw new System.NotImplementedException();
         }
-    }
-
-    private void Start()
-    {
-        _player = OwnerGameObject.GetComponent<Player>();
     }
     
     public override void OnStartNetwork() // OnEnable
@@ -145,11 +139,6 @@ public class ProjectileMovement : NetworkBehaviour
     {
         RotateTowardsMovement();
         ClampVelocity();
-        
-        if (_firstTime && _player.IsOwner)
-        {
-            _trailRenderer.startColor = Color.cyan;
-        }
     }
 
     private void ClampVelocity()
@@ -172,24 +161,17 @@ public class ProjectileMovement : NetworkBehaviour
         if (!IsServerInitialized)
         {
             _sprite.enabled = false;
-            return;
         }
         
         if (other.gameObject != OwnerGameObject && other.gameObject.CompareTag("Player"))
         {
-            OwnerGameObject.GetComponent<Player>().AddScore();
-            
-            if (_player.IsOwner)
-            {
-                AudioManager.GetInstance().SetAudio(SOUND_TYPE.DAMAGE_SELF);
-            }
-
-            else
-            {
-                AudioManager.GetInstance().SetAudio(SOUND_TYPE.DAMAGE_OPPONENT);
-            }
+            if (IsServerInitialized)
+                OwnerGameObject.GetComponent<Player>().AddScore();
         }
-        
-        Despawn();
+
+        if (IsServerInitialized)
+        {
+            Despawn();
+        }
     }
 }

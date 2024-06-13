@@ -4988,7 +4988,7 @@ MonoBehaviour:
   _graphicalObject: {fileID: 8321369249241896574}
   _enableStateForwarding: 1
   _networkTransform: {fileID: 0}
-  _ownerInterpolation: 2
+  _ownerInterpolation: 4
   _enableTeleport: 0
   _teleportThreshold: 1
   <PrefabId>k__BackingField: 6
@@ -5089,7 +5089,7 @@ MonoBehaviour:
   _maxSpeed: 0
   OwnerGameObject: {fileID: 0}
   Direction: {x: -1, y: 0}
-  ownerId: 0
+  ownerId: 1
 --- !u!114 &3419013662149854923
 MonoBehaviour:
   m_ObjectHideFlags: 0
