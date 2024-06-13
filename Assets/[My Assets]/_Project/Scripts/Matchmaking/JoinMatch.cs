@@ -8,11 +8,17 @@ public class JoinMatch : MonoBehaviour
     [SerializeField] private GameObject _fishnetCanvas;
     private WaitForSeconds _ws1 = new WaitForSeconds(1f);
     private NetworkManager _networkManager;
+
+    [SerializeField] private GameObject _loadingScreen;
+    [SerializeField] private SetAudioClip _setAudioClip;
     
     void Start()
     {
         if (Matchmaking.FoundServer == null)
+        {
+            StartMatch();
             return;
+        }
         
         _fishnetCanvas.SetActive(false);
         
@@ -33,7 +39,14 @@ public class JoinMatch : MonoBehaviour
         while (!_networkManager.ClientManager.Connection.IsActive)
         {
             _networkManager.ClientManager.StartConnection();   
-            yield return _ws1;
+            yield return null;
         }
+        StartMatch();
+    }
+
+    private void StartMatch()
+    {
+        _loadingScreen.SetActive(false);
+        _setAudioClip.enabled = true;
     }
 }
