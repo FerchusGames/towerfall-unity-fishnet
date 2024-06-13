@@ -1,4 +1,5 @@
 using System;
+using FishNet.Connection;
 using UnityEngine;
 using FishNet.Object;
 using FishNet.Object.Prediction;
@@ -10,14 +11,12 @@ using UnityEngine.UI;
 public class ProjectileMovement : NetworkBehaviour
 {
     [SerializeField] private float _force;
-    
+    [SerializeField] private TrailRenderer _trailRenderer;
     private Rigidbody2D _rigidbody2D;
     [SerializeField] private SpriteRenderer _sprite;
-
     [SerializeField] private float _maxSpeed;
-    
     private const float MAX_PASSED_TIME = 0.3f;
-    
+    private bool _firstTime = false;
     public GameObject OwnerGameObject;
     private Player _player;
     public Vector2 Direction;
@@ -84,7 +83,7 @@ public class ProjectileMovement : NetworkBehaviour
     {
         _player = OwnerGameObject.GetComponent<Player>();
     }
-
+    
     public override void OnStartNetwork() // OnEnable
     {
         base.TimeManager.OnTick += OnTick;
@@ -146,6 +145,11 @@ public class ProjectileMovement : NetworkBehaviour
     {
         RotateTowardsMovement();
         ClampVelocity();
+        
+        if (_firstTime && _player.IsOwner)
+        {
+            _trailRenderer.startColor = Color.cyan;
+        }
     }
 
     private void ClampVelocity()
