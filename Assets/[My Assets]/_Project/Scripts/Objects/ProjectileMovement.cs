@@ -16,7 +16,7 @@ public class ProjectileMovement : NetworkBehaviour
     [SerializeField] private SpriteRenderer _sprite;
     [SerializeField] private float _maxSpeed;
     private const float MAX_PASSED_TIME = 0.3f;
-    private bool _firstTime = false;
+    private bool _firstTime = true;
     public GameObject OwnerGameObject;
     private Player _player;
     public Vector2 Direction;
@@ -161,8 +161,14 @@ public class ProjectileMovement : NetworkBehaviour
         }
     }
 
-    private void OnCollisionEnter2D(Collision2D other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
+        if (_firstTime)
+        {
+            _firstTime = false;
+            return;
+        }
+        
         if (!IsServerInitialized)
         {
             _sprite.enabled = false;

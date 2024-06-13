@@ -443,12 +443,12 @@ public class Player : NetworkBehaviour, ICloned
                 _jumpKeyUpCache = true;
             }
 
-            if (Input.GetKeyDown(KeyCode.LeftArrow))
+            if (Input.GetKeyDown(KeyCode.J) || Input.GetKeyDown(KeyCode.F))   
             {
                 _shootKeyDownChache = true;
             }
             
-            if (Input.GetKeyUp(KeyCode.LeftArrow))
+            if (Input.GetKeyUp(KeyCode.J) || Input.GetKeyUp(KeyCode.F))
             {
                 _shootKeyUpCache = true;
             }
