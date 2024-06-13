@@ -323,7 +323,6 @@ MonoBehaviour:
   - {fileID: 2264282644866462326}
   - {fileID: 1538350437284599315}
   - {fileID: 7467914129910776927}
-  - {fileID: 0}
   <SerializedRootNetworkBehaviour>k__BackingField: {fileID: 0}
   <NestedRootNetworkBehaviours>k__BackingField: []
   SerializedTransformProperties:
@@ -577,7 +576,7 @@ Transform:
   m_GameObject: {fileID: 6144575449416599828}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.283, y: -0.17, z: 0}
+  m_LocalPosition: {x: 1.06, y: -0.17, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

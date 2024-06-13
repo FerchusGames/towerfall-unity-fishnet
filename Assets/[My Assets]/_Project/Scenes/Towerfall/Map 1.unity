@@ -645,14 +645,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _shuffleType: 0
   _audioClips:
-  - {fileID: 8300000, guid: c9d4c34bede5cff41a4ca4f8eed1f9e9, type: 3}
-  - {fileID: 8300000, guid: 4b29c9510ff81434bb5d4bb2a6fb638e, type: 3}
   - {fileID: 8300000, guid: bf0315042e10d494091be6c930d65dc9, type: 3}
-  - {fileID: 8300000, guid: 0330a77f452953b4ebeeb0b4897d8676, type: 3}
   - {fileID: 8300000, guid: 800ec2372c995e04d9b53497a0b91e3d, type: 3}
   - {fileID: 8300000, guid: b53b9640be95d9340b5fdeb744b44962, type: 3}
-  - {fileID: 8300000, guid: 16ce809190fe52b44acd342ff0e1a22c, type: 3}
-  - {fileID: 8300000, guid: 61c656cb0f08c9b4da3d5c6f9379b1bb, type: 3}
 --- !u!1 &540503478
 GameObject:
   m_ObjectHideFlags: 0

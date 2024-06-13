@@ -152,11 +152,11 @@ public class ProjectileMovement : NetworkBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (_firstTime)
-        {
-            _firstTime = false;
-            return;
-        }
+        // if (_firstTime)
+        // {
+        //     _firstTime = false;
+        //     return;
+        // }
         
         if (!IsServerInitialized)
         {
