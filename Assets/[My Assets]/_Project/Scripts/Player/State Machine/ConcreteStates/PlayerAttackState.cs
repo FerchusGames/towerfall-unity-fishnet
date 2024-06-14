@@ -7,6 +7,11 @@ public class PlayerAttackState : PlayerState
 {
     private float _attackTimer;
     private GameObject _arrowGameObject;
+
+    private Vector2 vecUpRight = new Vector2(1, 1);
+    private Vector2 vecUpLeft = new Vector2(-1, 1);
+    private Vector2 vecDownRight = new Vector2(1, -1);
+    private Vector2 vecDownLeft = new Vector2(-1, -1);
     
     public PlayerAttackState(Player player, PlayerStateMachine playerStateMachine) : base(player, playerStateMachine)
     {
@@ -23,6 +28,8 @@ public class PlayerAttackState : PlayerState
 
         if (_player.LastAttackTime > 0)
             return;
+        
+        _player.HideArrows();
 
         if (_inputData.Joystick != Vector2.zero)
         {
@@ -70,8 +77,37 @@ public class PlayerAttackState : PlayerState
         }
         
         JumpChecks(state);
+        
+        ShowArrows();
     }
 
+    private void ShowArrows()
+    {
+        if (_inputData.Joystick == Vector2.right)
+            _player._rightDir.enabled = true;
+        
+        if (_inputData.Joystick == Vector2.left)
+            _player._rightDir.enabled = true;
+        
+        if (_inputData.Joystick == Vector2.down)
+            _player._downDir.enabled = true;
+        
+        if (_inputData.Joystick == Vector2.up)
+            _player._upDir.enabled = true;
+        
+        if (_inputData.Joystick == vecUpRight)
+            _player._upRightDir.enabled = true;
+        
+        if (_inputData.Joystick == vecUpLeft)
+            _player._upRightDir.enabled = true;
+        
+        if (_inputData.Joystick == vecDownRight)
+            _player._downRightDir.enabled = true;
+        
+        if (_inputData.Joystick == vecDownLeft)
+            _player._downRightDir.enabled = true;
+    }
+    
     public override void PhysicsUpdate()
     {
         base.PhysicsUpdate();

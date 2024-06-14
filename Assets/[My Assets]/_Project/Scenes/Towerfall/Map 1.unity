@@ -952,6 +952,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _fishnetCanvas: {fileID: 945436973}
+  _networkDiscoveryHud: {fileID: 570920904}
   _loadingScreen: {fileID: 1409709936}
   _setAudioClip: {fileID: 519420034}
 --- !u!114 &570920903
@@ -972,6 +973,35 @@ MonoBehaviour:
   _redundancyCount: 2
   _allowPredictedSpawning: 1
   _reservedObjectIds: 15
+--- !u!114 &570920904
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 570920891}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a695a4ff4150ab48a9e376b5f4aea0e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  networkDiscovery: {fileID: 570920905}
+--- !u!114 &570920905
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 570920891}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4409bd595d9938b488a1730aa2e0c3ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  secret: FerchusGames
+  port: 1987
+  searchTimeout: 9999
+  automatic: 0
 --- !u!1 &585102235
 GameObject:
   m_ObjectHideFlags: 0
@@ -1269,6 +1299,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7443408887813606051, guid: 0b650fca685f2eb41a86538aa883e4c1, type: 3}
       insertIndex: -1
       addedObject: {fileID: 570920903}
+    - targetCorrespondingSourceObject: {fileID: 7443408887813606051, guid: 0b650fca685f2eb41a86538aa883e4c1, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 570920905}
+    - targetCorrespondingSourceObject: {fileID: 7443408887813606051, guid: 0b650fca685f2eb41a86538aa883e4c1, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 570920904}
   m_SourcePrefab: {fileID: 100100000, guid: 0b650fca685f2eb41a86538aa883e4c1, type: 3}
 --- !u!1001 &896047105
 PrefabInstance:

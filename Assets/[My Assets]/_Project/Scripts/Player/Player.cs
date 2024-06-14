@@ -13,6 +13,7 @@ using FishNet.Object.Synchronizing;
 using FishNet.Transporting;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class Player : NetworkBehaviour, ICloned
 {
@@ -20,6 +21,18 @@ public class Player : NetworkBehaviour, ICloned
 
     readonly private SyncVar<int> _playerScore = new SyncVar<int>();
 
+    [Header("ArrowDirections")] 
+    public SpriteRenderer _upDir;
+    public SpriteRenderer _downDir;
+    public SpriteRenderer _leftDir;
+    public SpriteRenderer _rightDir;
+    public SpriteRenderer _upRightDir;
+    public SpriteRenderer _upLeftDir;
+    public SpriteRenderer _downRightDir;
+    public SpriteRenderer _downLeftDir;
+    
+    [Header("UI")]
+    
     [SerializeField] private TextMeshProUGUI _scoreText;
     [SerializeField] private SpriteRenderer _arrowSprite;
     
@@ -410,6 +423,7 @@ public class Player : NetworkBehaviour, ICloned
     [Replicate]
     private void NetworkUpdate(InputData input, ReplicateState state = ReplicateState.Invalid, Channel channel = Channel.Unreliable)
     {
+        HideArrows();
         UpdateTimers();
         GroundCheck();
         GravityShifts(input);
@@ -608,4 +622,16 @@ public class Player : NetworkBehaviour, ICloned
     }
     
     #endregion
+
+    public void HideArrows()
+    {
+        _upDir.enabled = false;
+        _downDir.enabled = false;
+        _leftDir.enabled = false;
+        _rightDir.enabled = false;
+        _upRightDir.enabled = false;
+        _upLeftDir.enabled = false;
+        _downRightDir .enabled = false;
+        _downLeftDir.enabled = false;
+    }
 }

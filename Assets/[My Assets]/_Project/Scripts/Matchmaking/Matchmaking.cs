@@ -14,6 +14,8 @@ public class Matchmaking : MonoBehaviour
     [SerializeField] private Button _searchButton;
     
     public static Server FoundServer { get; private set; }
+
+    public static USER_TYPE UserType { get; private set; } = USER_TYPE.PLAYFLOW_SERVER;
     
     private const string clientToken = "68862c21c5b0502c617a085a03a1568d";
     
@@ -58,7 +60,30 @@ public class Matchmaking : MonoBehaviour
     private void OnMatchFound(Server server)
     {
         FoundServer = server;
-
+        UserType = USER_TYPE.PLAYFLOW_CLIENT;
+        
         SceneManager.LoadScene("Map 1");
     }
+    
+    public void StartLanHost()
+    {
+        FoundServer = null;
+        UserType = USER_TYPE.LAN_HOST;
+        SceneManager.LoadScene("Map 1");
+    }
+
+    public void StartLanClient()
+    {
+        FoundServer = null;
+        UserType = USER_TYPE.LAN_CLIENT;
+        SceneManager.LoadScene("Map 1");
+    }
+}
+
+public enum USER_TYPE
+{
+    LAN_HOST,
+    LAN_CLIENT,
+    PLAYFLOW_SERVER,
+    PLAYFLOW_CLIENT,
 }
