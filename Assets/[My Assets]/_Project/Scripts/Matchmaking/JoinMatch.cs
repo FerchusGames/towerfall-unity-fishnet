@@ -52,9 +52,9 @@ public class JoinMatch : MonoBehaviour
                 break;
             
            case USER_TYPE.LAN_HOST:
+                StartMatch();
                 FishNet.InstanceFinder.ServerManager.StartConnection();
                 FindObjectOfType<NetworkDiscovery>().AdvertiseServer();
-                StartMatch();
                break;
            
            case USER_TYPE.LAN_CLIENT:

@@ -6,6 +6,7 @@
 */
 
 using System;
+using System.Collections;
 using FishNet;
 using FishNet.Object;
 using FishNet.Object.Prediction;
@@ -176,6 +177,11 @@ public class Player : NetworkBehaviour, ICloned
             if (!IsServerInitialized)
             {
                 Time.timeScale = 0;
+            }
+
+            else
+            {
+                StartCoroutine(ResetAfterDelay());
             }
             
             GameManager.Instance.ResultsBackground.gameObject.SetActive(true);
@@ -633,5 +639,11 @@ public class Player : NetworkBehaviour, ICloned
         _upLeftDir.enabled = false;
         _downRightDir .enabled = false;
         _downLeftDir.enabled = false;
+    }
+
+    private IEnumerator ResetAfterDelay()
+    {
+        yield return new WaitForSeconds(1f);
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Map 1");
     }
 }
