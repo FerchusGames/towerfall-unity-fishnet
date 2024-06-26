@@ -5,9 +5,12 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/[My Assets]/_Project/Scenes/Towerfall/Menu.unity
     guid: cbfdc99dd0800bd4cbda19186533bccc
+  - enabled: 1
+    path: Assets/[My Assets]/_Project/Scenes/Towerfall/Menu LAN.unity
+    guid: 6f73144a9e8bf284f9d8d98b02313ff7
   - enabled: 1
     path: Assets/[My Assets]/_Project/Scenes/Towerfall/Map 1.unity
     guid: 58c1bd4f0b2847f44b7b102d5fb9ebda

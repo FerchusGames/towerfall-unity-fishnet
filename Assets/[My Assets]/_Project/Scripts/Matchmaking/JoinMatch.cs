@@ -55,13 +55,14 @@ public class JoinMatch : MonoBehaviour
                 StartMatch();
                 FishNet.InstanceFinder.ServerManager.StartConnection();
                 FindObjectOfType<NetworkDiscovery>().AdvertiseServer();
+                FishNet.InstanceFinder.ClientManager.StartConnection();
                break;
            
            case USER_TYPE.LAN_CLIENT:
-                FindObjectOfType<NetworkDiscovery>().SearchForServers();
+               FindObjectOfType<NetworkDiscovery>().SearchForServers(); 
                break;
         }
-        
+                
         StartCoroutine(TryConnection());
     }
 
@@ -83,6 +84,16 @@ public class JoinMatch : MonoBehaviour
         StartMatch();
     }
 
+    private IEnumerator LanServerSearch()
+    {
+        while (!_networkManager.ClientManager.Connection.IsActive)
+        {
+            FindObjectOfType<NetworkDiscovery>().SearchForServers(); 
+            yield return new WaitForSeconds(1f);
+            FindObjectOfType<NetworkDiscovery>().StopSearchingOrAdvertising(); 
+        }
+    }
+    
     private void StartMatch()
     {
         _loadingScreen.SetActive(false);

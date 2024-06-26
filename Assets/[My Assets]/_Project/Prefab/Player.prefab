@@ -258,6 +258,7 @@ MonoBehaviour:
   LastAttackTime: 0
   LastOnGroundTime: 0
   LastPressedJumpTime: 0
+  LastAimTime: 0
   <RunMaxSpeed>k__BackingField: 10
   <RunAccelerationRate>k__BackingField: 100
   <RunDecelerationRate>k__BackingField: 100
@@ -285,6 +286,7 @@ MonoBehaviour:
   <ArrowPrefab>k__BackingField: {fileID: 4834802896249470314, guid: 26f1f1a643f45c64c90ca27df11c16fe, type: 3}
   <ArrowSpawnPoint>k__BackingField: {fileID: 3819010156052760649}
   <ArrowSpawnInterval>k__BackingField: 0.5
+  <AimTresholdTime>k__BackingField: 0.2
   <GroundLayer>k__BackingField:
     serializedVersion: 2
     m_Bits: 8

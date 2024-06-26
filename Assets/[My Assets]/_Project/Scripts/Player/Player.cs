@@ -62,6 +62,7 @@ public class Player : NetworkBehaviour, ICloned
     public float LastAttackTime;
     public float LastOnGroundTime;
     public float LastPressedJumpTime;
+    public float LastAimTime;
 
     [field:Header("Acceleration")] [SerializeField]
     [field:SerializeField] public float RunMaxSpeed { get; private set; } = default;
@@ -110,6 +111,7 @@ public class Player : NetworkBehaviour, ICloned
     [field:SerializeField] public GameObject ArrowPrefab { get; private set; }
     [field:SerializeField] public Transform ArrowSpawnPoint { get; private set; }
     [field:SerializeField] public float ArrowSpawnInterval { get; private set; } = default;
+    [field: SerializeField] public float AimTresholdTime { get; private set; } = 0.2f;
     
     [field:Header("Layers & Tags")] 
     [field:SerializeField] public LayerMask GroundLayer { get; private set; } = default;
@@ -174,9 +176,11 @@ public class Player : NetworkBehaviour, ICloned
     {
         if (_playerScore.Value >= 5)
         {
+            Time.timeScale = 0;
+            
             if (!IsServerInitialized)
             {
-                Time.timeScale = 0;
+                //Time.timeScale = 0;
             }
 
             else
@@ -287,19 +291,21 @@ public class Player : NetworkBehaviour, ICloned
         public float LastOnGroundTime;
         public float LastPressedJumpTime;
         public float LastAttackTime;
+        public float LastAimTime;
         public bool IsJumping;
         public bool IsJumpCut;
         
         // Life, we can use a syncvar
         // Variables that affect the movement
 
-        public ReconciliationData(Vector3 position, Vector3 velocity, float lastOnGroundTime, float lastPressedJumpTime, float lastAttackTime,  bool isJumping, bool isJumpCut)
+        public ReconciliationData(Vector3 position, Vector3 velocity, float lastOnGroundTime, float lastPressedJumpTime, float lastAttackTime, float lastAimTime,  bool isJumping, bool isJumpCut)
         {
             Position = position;
             Velocity = velocity;
             LastOnGroundTime = lastOnGroundTime;
             LastPressedJumpTime = lastPressedJumpTime;
             LastAttackTime = lastAttackTime;
+            LastAimTime = lastAimTime;
             IsJumping = isJumping;
             IsJumpCut = isJumpCut;
             tick = 0; // Fishnet deals with assigning the value, we just equal to 0 to prevent C# from throwing errors.
@@ -395,6 +401,7 @@ public class Player : NetworkBehaviour, ICloned
                 LastOnGroundTime,
                 LastPressedJumpTime,
                 LastAttackTime,
+                LastAimTime,
                 IsJumping,
                 IsJumpCut);
             Reconciliation(reconciliationData); 
@@ -418,6 +425,7 @@ public class Player : NetworkBehaviour, ICloned
         LastOnGroundTime = reconciliationData.LastOnGroundTime;
         LastPressedJumpTime = reconciliationData.LastPressedJumpTime;
         LastAttackTime = reconciliationData.LastAttackTime;
+        LastAimTime = reconciliationData.LastAimTime;
         IsJumping = reconciliationData.IsJumping;
         IsJumpCut = reconciliationData.IsJumpCut;
     }
@@ -547,6 +555,8 @@ public class Player : NetworkBehaviour, ICloned
 
     private void SetAnimatorParameters(InputData inputData)
     {
+        if (!IsOwner) {return;}
+        
         Animators.SetFloat(_ahSpeed, Mathf.Abs(inputData.Joystick.x));
         Animators.SetBool(_ahIsJumping, IsJumping || IsJumpFalling);
     }
@@ -560,6 +570,7 @@ public class Player : NetworkBehaviour, ICloned
         LastOnGroundTime -= delta;
         LastPressedJumpTime -= delta;
         LastAttackTime -= delta;
+        LastAimTime -= delta;
 
         _arrowSprite.enabled = LastAttackTime <= 0;
     }

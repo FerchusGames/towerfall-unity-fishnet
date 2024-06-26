@@ -12,6 +12,8 @@ public class PlayerAttackState : PlayerState
     private Vector2 vecUpLeft = new Vector2(-1, 1);
     private Vector2 vecDownRight = new Vector2(1, -1);
     private Vector2 vecDownLeft = new Vector2(-1, -1);
+
+    private Vector2 aimDirection;
     
     public PlayerAttackState(Player player, PlayerStateMachine playerStateMachine) : base(player, playerStateMachine)
     {
@@ -30,13 +32,13 @@ public class PlayerAttackState : PlayerState
             return;
         
         _player.HideArrows();
-
-        if (_inputData.Joystick != Vector2.zero)
+        
+        if (aimDirection != Vector2.zero)
         {
             if (InstanceFinder.NetworkManager.IsServerStarted)
             {
                 _player.LastAttackTime = _player.ArrowSpawnInterval;
-                Vector2 shootingDirection = _inputData.Joystick.normalized;
+                Vector2 shootingDirection = aimDirection.normalized;
 
                 GameObject arrow = _player.ArrowPrefab;
                 ProjectileMovement projectileMovement = arrow.GetComponent<ProjectileMovement>();
@@ -62,6 +64,22 @@ public class PlayerAttackState : PlayerState
         }
     }
 
+    private Vector2 GetAimDirection()
+    {
+        if (_inputData.Joystick != Vector2.zero)
+        {
+            _player.LastAimTime = _player.AimTresholdTime;
+            return _inputData.Joystick;
+        }
+        
+        if (_player.LastAimTime > 0)
+        {
+            return aimDirection;
+        }
+
+        return Vector2.zero;
+    }
+
     public override void FrameUpdate(Player.InputData input, ReplicateState state = ReplicateState.Invalid, Channel channel = Channel.Unreliable)
     {
         base.FrameUpdate(input);
@@ -75,6 +93,8 @@ public class PlayerAttackState : PlayerState
         {
             _player.SetVelocity(new Vector2(0, _player.PlayerRigidbody2D.velocity.y));
         }
+        
+        aimDirection = GetAimDirection();
         
         JumpChecks(state);
         
